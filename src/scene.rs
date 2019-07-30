@@ -19,13 +19,13 @@ pub fn random_scene() -> HitableList {
     }));
 
     // a lot of small spheres
-    for a in -5..5 {
-        for b in -5..5 {
+    for a in -10..10 {
+        for b in -10..10 {
             let choose_mat: f32 = rng.gen();
             let center: Vec3 = Vec3::new(
-                2.0 * a as f32 + 0.9 * rng.gen::<f32>(),
+                a as f32 + 0.9 * rng.gen::<f32>(),
                 0.2,
-                2.0 * b as f32 + 0.9 * rng.gen::<f32>(),
+                b as f32 + 0.9 * rng.gen::<f32>(),
             );
 
             if (center - Vec3::new(4.0, 0.2, 0.0)).length() > 0.9 {
@@ -98,13 +98,13 @@ pub fn random_scene_with_motion() -> HitableList {
     }));
 
     // a lot of small spheres
-    for a in -5..5 {
-        for b in -5..5 {
+    for a in -10..10 {
+        for b in -10..10 {
             let choose_mat: f32 = rng.gen();
             let center: Vec3 = Vec3::new(
-                2.0 * a as f32 + 0.9 * rng.gen::<f32>(),
+                a as f32 + 0.9 * rng.gen::<f32>(),
                 0.2,
-                2.0 * b as f32 + 0.9 * rng.gen::<f32>(),
+                b as f32 + 0.9 * rng.gen::<f32>(),
             );
 
             if (center - Vec3::new(4.0, 0.2, 0.0)).length() > 0.9 {
