@@ -19,8 +19,8 @@ pub fn random_scene() -> HitableList {
     }));
 
     // a lot of small spheres
-    for a in -10..10 {
-        for b in -10..10 {
+    for a in -5..5 {
+        for b in -5..5 {
             let choose_mat: f32 = rng.gen();
             let center: Vec3 = Vec3::new(
                 a as f32 + 0.9 * rng.gen::<f32>(),
@@ -98,8 +98,8 @@ pub fn random_scene_with_motion() -> HitableList {
     }));
 
     // a lot of small spheres
-    for a in -10..10 {
-        for b in -10..10 {
+    for a in -5..5 {
+        for b in -5..5 {
             let choose_mat: f32 = rng.gen();
             let center: Vec3 = Vec3::new(
                 a as f32 + 0.9 * rng.gen::<f32>(),
