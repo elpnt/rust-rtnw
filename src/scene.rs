@@ -157,12 +157,12 @@ pub fn random_scene_with_motion() -> HitableList {
     hitables.push(Arc::new(Sphere {
         center: Vec3::new(-4.0, 1.0, 0.0),
         radius: 1.0,
-        material: Arc::new(Lambertian::new(0.4, 0.2, 0.1)),
+        material: Arc::new(Lambertian::new(0.2, 0.6, 0.8)),
     }));
     hitables.push(Arc::new(Sphere {
         center: Vec3::new(4.0, 1.0, 0.0),
         radius: 1.0,
-        material: Arc::new(Metal::new((0.7, 0.6, 0.5), 0.0)),
+        material: Arc::new(Metal::new((0.3, 0.2, 0.2), 0.0)),
     }));
 
     HitableList { hitables }
