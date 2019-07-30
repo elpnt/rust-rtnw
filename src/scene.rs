@@ -15,7 +15,7 @@ pub fn random_scene() -> HitableList {
     hitables.push(Arc::new(Sphere {
         center: Vec3::new(0.0, -1000.0, 0.0),
         radius: 1000.0,
-        material: Arc::new(Lambertian::new(0.5, 0.5, 0.5)),
+        material: Arc::new(Lambertian::new(0.5, 1.0, 0.5)),
     }));
 
     // a lot of small spheres
@@ -162,7 +162,7 @@ pub fn random_scene_with_motion() -> HitableList {
     hitables.push(Arc::new(Sphere {
         center: Vec3::new(4.0, 1.0, 0.0),
         radius: 1.0,
-        material: Arc::new(Metal::new((0.3, 0.2, 0.2), 0.0)),
+        material: Arc::new(Metal::new((0.9, 0.8, 0.8), 0.0)),
     }));
 
     HitableList { hitables }
