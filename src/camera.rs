@@ -13,6 +13,8 @@ pub struct Camera {
     pub v: Vec3,
     pub w: Vec3,
     pub lens_radius: f32,
+    pub time0: f32, // shutter open time
+    pub time1: f32, // shutter close time
 }
 
 impl Camera {
@@ -24,7 +26,11 @@ impl Camera {
         aspect: f32,
         aperture: f32,
         focus_dist: f32,
+        t0: f32,
+        t1: f32,
     ) -> Self {
+        let time0: f32 = t0;
+        let time1: f32 = t1;
         let lens_radius: f32 = aperture / 2.0;
         let theta: f32 = vfov * PI / 180.0;
         let half_height: f32 = (theta / 2.0).tan();
@@ -34,18 +40,21 @@ impl Camera {
         let w: Vec3 = (lookfrom - lookat).unit_vector();
         let u: Vec3 = vup.cross(&w).unit_vector();
         let v: Vec3 = w.cross(&u);
+        let lower_left_corner: Vec3 =
+            origin - half_width * focus_dist * u - half_height * focus_dist * v - focus_dist * w;
+        let horizontal: Vec3 = 2.0 * half_width * focus_dist * u;
+        let vertical: Vec3 = 2.0 * half_height * focus_dist * v;
         Camera {
-            lower_left_corner: origin
-                - half_width * focus_dist * u
-                - half_height * focus_dist * v
-                - focus_dist * w,
-            horizontal: 2.0 * half_width * focus_dist * u,
-            vertical: 2.0 * half_height * focus_dist * v,
             origin,
+            lower_left_corner,
+            horizontal,
+            vertical,
             u,
             v,
             w,
             lens_radius,
+            time0,
+            time1,
         }
     }
 
@@ -53,10 +62,11 @@ impl Camera {
         let rd: Vec3 = self.lens_radius * random_in_unit_disk();
         let offset: Vec3 = self.u * rd.x + self.v * rd.y;
         Ray {
-            origin: self.origin + offset,
-            direction: self.lower_left_corner + s * self.horizontal + t * self.vertical
+            A: self.origin + offset,
+            B: self.lower_left_corner + s * self.horizontal + t * self.vertical
                 - self.origin
                 - offset,
+            _time: self.time0 + rand::random::<f32>() * (self.time1 - self.time0),
         }
     }
 }
