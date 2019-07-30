@@ -25,11 +25,12 @@ impl Lambertian {
 }
 
 impl Material for Lambertian {
-    fn scatter(&self, _r_in: &Ray, rec: &HitRecord) -> Option<ScatterRecord> {
+    fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<ScatterRecord> {
         let target: Vec3 = rec.p + rec.normal + random_in_unit_sphere();
         let scattered = Ray {
-            origin: rec.p,
-            direction: target - rec.p,
+            A: rec.p,
+            B: target - rec.p,
+            _time: r_in.time(),
         };
         let attenuation: Vec3 = self.albedo;
 
@@ -58,14 +59,15 @@ impl Metal {
 impl Material for Metal {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<ScatterRecord> {
         let f: f32 = if self.fuzz < 1.0 { self.fuzz } else { 1.0 };
-        let reflected: Vec3 = reflect(r_in.direction.unit_vector(), rec.normal);
+        let reflected: Vec3 = reflect(r_in.direction().unit_vector(), rec.normal);
         let scattered = Ray {
-            origin: rec.p,
-            direction: reflected + f * random_in_unit_sphere(),
+            A: rec.p,
+            B: reflected + f * random_in_unit_sphere(),
+            _time: r_in.time(),
         };
         let attenuation: Vec3 = self.albedo;
 
-        if scattered.direction.dot(&rec.normal) > 0.0 {
+        if scattered.direction().dot(&rec.normal) > 0.0 {
             Some(ScatterRecord {
                 attenuation,
                 scattered,
@@ -105,7 +107,7 @@ impl Dielectric {
 
 impl Material for Dielectric {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<ScatterRecord> {
-        let reflected: Vec3 = reflect(r_in.direction, rec.normal);
+        let reflected: Vec3 = reflect(r_in.direction(), rec.normal);
         let attenuation = Vec3::new(1.0, 1.0, 1.0);
 
         let outward_normal: Vec3;
@@ -113,34 +115,35 @@ impl Material for Dielectric {
         let cosine: f32;
         let reflect_prob: f32;
 
-        if r_in.direction.dot(&rec.normal) > 0.0 {
+        if r_in.direction().dot(&rec.normal) > 0.0 {
             outward_normal = -rec.normal;
             ni_over_nt = self.refract_idx;
-            cosine = self.refract_idx * r_in.direction.dot(&rec.normal) / r_in.direction.length();
+            cosine =
+                self.refract_idx * r_in.direction().dot(&rec.normal) / r_in.direction().length();
         } else {
             outward_normal = rec.normal;
             ni_over_nt = 1.0 / self.refract_idx;
-            cosine = -r_in.direction.dot(&rec.normal) / r_in.direction.length();
+            cosine = -r_in.direction().dot(&rec.normal) / r_in.direction().length();
         }
 
-        match refract(&r_in.direction, &outward_normal, ni_over_nt) {
+        match refract(&r_in.direction(), &outward_normal, ni_over_nt) {
             Some(refracted) => {
                 reflect_prob = schlick(cosine, self.refract_idx);
                 if rand::random::<f32>() > reflect_prob {
                     Some(ScatterRecord {
                         attenuation,
-                        scattered: Ray::new(rec.p, refracted),
+                        scattered: Ray::new(rec.p, refracted, r_in.time()),
                     })
                 } else {
                     Some(ScatterRecord {
                         attenuation,
-                        scattered: Ray::new(rec.p, reflected),
+                        scattered: Ray::new(rec.p, reflected, r_in.time()),
                     })
                 }
             }
             None => Some(ScatterRecord {
                 attenuation,
-                scattered: Ray::new(rec.p, reflected),
+                scattered: Ray::new(rec.p, reflected, r_in.time()),
             }),
         }
     }

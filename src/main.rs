@@ -33,7 +33,7 @@ fn color(r: &Ray, world: &HitableList, depth: u32) -> Vec3 {
             Vec3::new(0.0, 0.0, 0.0)
         }
     } else {
-        let unit_direction: Vec3 = r.direction.unit_vector();
+        let unit_direction: Vec3 = r.direction().unit_vector();
         let t: f32 = 0.5 * (unit_direction.y + 1.0);
         (1.0 - t) * Vec3::new(1.0, 1.0, 1.0) + t * Vec3::new(0.5, 0.7, 1.0)
     }
@@ -42,25 +42,37 @@ fn color(r: &Ray, world: &HitableList, depth: u32) -> Vec3 {
 fn main() {
     let nx: u32 = 400;
     let ny: u32 = 300;
-    let ns: u32 = 10; // number of samples inside each pixel
+    let ns: u32 = 50; // number of samples inside each pixel
 
     // Objects setup
-    let world = scene::room_scene();
+    let world = scene::random_scene_with_motion();
 
     // Camera setup
-    let lookfrom: Vec3 = Vec3::new(50.0, 52.0, 300.0);
-    let lookat: Vec3 = lookfrom + Vec3::new(0.0, -0.043, -1.0);
+    let lookfrom: Vec3 = Vec3::new(10.0, 1.7, 3.0);
+    let lookat: Vec3 = Vec3::new(0.0, 0.8, 0.0);
     let vup: Vec3 = Vec3::new(0.0, 1.0, 0.0);
     let vfov: f32 = 30.0;
     let aspect: f32 = nx as f32 / ny as f32;
-    let aperture: f32 = 0.0;
+    let aperture: f32 = 0.05;
     let dist_to_focus: f32 = (lookfrom - lookat).length();
-    let cam = Camera::new(lookfrom, lookat, vup, vfov, aspect, aperture, dist_to_focus);
+    let time0: f32 = 0.0;
+    let time1: f32 = 1.0;
+    let cam = Camera::new(
+        lookfrom,
+        lookat,
+        vup,
+        vfov,
+        aspect,
+        aperture,
+        dist_to_focus,
+        time0,
+        time1,
+    );
 
     // Parallell process
     let start = Instant::now();
 
-    let mut f = BufWriter::new(fs::File::create("result.ppm").unwrap());
+    let mut f = BufWriter::new(fs::File::create("./image/motionblur.ppm").unwrap());
     f.write_all(format!("P3\n{} {}\n255\n", nx, ny).as_bytes())
         .unwrap();
 
