@@ -62,11 +62,11 @@ impl Camera {
         let rd: Vec3 = self.lens_radius * random_in_unit_disk();
         let offset: Vec3 = self.u * rd.x + self.v * rd.y;
         Ray {
-            A: self.origin + offset,
-            B: self.lower_left_corner + s * self.horizontal + t * self.vertical
+            origin: self.origin + offset,
+            direction: self.lower_left_corner + s * self.horizontal + t * self.vertical
                 - self.origin
                 - offset,
-            _time: self.time0 + rand::random::<f32>() * (self.time1 - self.time0),
+            time: self.time0 + rand::random::<f32>() * (self.time1 - self.time0),
         }
     }
 }

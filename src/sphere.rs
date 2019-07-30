@@ -24,9 +24,9 @@ impl Sphere {
 
 impl Hitable for Sphere {
     fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
-        let oc: Vec3 = r.origin() - self.center;
-        let a: f32 = r.direction().dot(&r.direction());
-        let b: f32 = oc.dot(&r.direction());
+        let oc: Vec3 = r.origin - self.center;
+        let a: f32 = r.direction.dot(&r.direction);
+        let b: f32 = oc.dot(&r.direction);
         let c: f32 = oc.dot(&oc) - self.radius * self.radius;
         let discriminant: f32 = b * b - a * c;
 
@@ -94,9 +94,9 @@ impl MovingSphere {
 
 impl Hitable for MovingSphere {
     fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
-        let oc: Vec3 = r.origin() - self.center_at_time(r.time());
-        let a: f32 = r.direction().dot(&r.direction());
-        let b: f32 = oc.dot(&r.direction());
+        let oc: Vec3 = r.origin - self.center_at_time(r.time);
+        let a: f32 = r.direction.dot(&r.direction);
+        let b: f32 = oc.dot(&r.direction);
         let c: f32 = oc.dot(&oc) - self.radius * self.radius;
         let discriminant: f32 = b * b - a * c;
 
@@ -107,10 +107,10 @@ impl Hitable for MovingSphere {
             let b1: bool = t_max > temp1 && temp1 > t_min;
             let b2: bool = t_max > temp2 && temp2 > t_min;
 
-            if discriminant > 0. && (b1 || b2) {
+            if b1 || b2 {
                 let t: f32 = if b1 { temp1 } else { temp2 };
                 let p: Vec3 = r.point_at_parameter(t);
-                let normal: Vec3 = (p - self.center_at_time(r.time())) / self.radius;
+                let normal: Vec3 = (p - self.center_at_time(r.time)) / self.radius;
                 Some(HitRecord {
                     t,
                     p,
@@ -118,6 +118,7 @@ impl Hitable for MovingSphere {
                     material: self.material.borrow(),
                 })
             } else {
+                // the solution `t` doesn't exist between t_min & t_max
                 None
             }
         } else {
