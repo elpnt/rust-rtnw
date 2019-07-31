@@ -1,10 +1,9 @@
 use crate::aabb::*;
 use crate::hitable::{HitRecord, Hitable};
 use crate::ray::Ray;
-use std::sync::Arc;
 
 pub struct HitableList {
-    pub hitables: Vec<Arc<Hitable>>,
+    pub hitables: Vec<Box<Hitable>>,
 }
 
 impl HitableList {

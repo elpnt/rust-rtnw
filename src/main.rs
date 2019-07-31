@@ -13,9 +13,9 @@ mod material;
 mod ray;
 mod scene;
 mod sphere;
+mod texture;
 mod vec3;
 
-use camera::Camera;
 use hitable::Hitable;
 use hitable_list::HitableList;
 use ray::Ray;
@@ -47,9 +47,10 @@ fn main() {
     let ns: u32 = 50; // number of samples inside each pixel
 
     // Objects setup
-    let world = scene::random_scene_with_motion();
+    let world = scene::two_spheres();
 
     // Camera setup
+    /*
     let lookfrom: Vec3 = Vec3::new(10.0, 1.7, 3.0);
     let lookat: Vec3 = Vec3::new(0.0, 0.8, 0.0);
     let vup: Vec3 = Vec3::new(0.0, 1.0, 0.0);
@@ -70,11 +71,13 @@ fn main() {
         time0,
         time1,
     );
+    */
+    let cam = camera::camera_for_two_spheres(nx, ny);
 
     // Parallell process
     let start = Instant::now();
 
-    let mut f = BufWriter::new(fs::File::create("./image/motionblur.ppm").unwrap());
+    let mut f = BufWriter::new(fs::File::create("./output/two_spheres.ppm").unwrap());
     f.write_all(format!("P3\n{} {}\n255\n", nx, ny).as_bytes())
         .unwrap();
 
