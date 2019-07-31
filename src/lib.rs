@@ -1,4 +1,5 @@
 pub mod aabb;
+pub mod perlin;
 pub mod texture;
 pub mod bvh;
 pub mod camera;
