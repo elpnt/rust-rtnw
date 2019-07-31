@@ -5,16 +5,15 @@ use crate::ray::Ray;
 use crate::vec3::Vec3;
 
 use std::borrow::Borrow;
-use std::sync::Arc;
 
 pub struct Sphere {
     pub center: Vec3,
     pub radius: f32,
-    pub material: Arc<Material>,
+    pub material: Box<Material>,
 }
 
 impl Sphere {
-    pub fn new(center: Vec3, radius: f32, material: Arc<Material>) -> Self {
+    pub fn new(center: Vec3, radius: f32, material: Box<Material>) -> Self {
         Sphere {
             center,
             radius,
@@ -73,7 +72,7 @@ pub struct MovingSphere {
     pub time0: f32,
     pub time1: f32,
     pub radius: f32,
-    pub material: Arc<Material>,
+    pub material: Box<Material>,
 }
 
 impl MovingSphere {
@@ -83,7 +82,7 @@ impl MovingSphere {
         time0: f32,
         time1: f32,
         radius: f32,
-        material: Arc<Material>,
+        material: Box<Material>,
     ) -> Self {
         MovingSphere {
             center0,

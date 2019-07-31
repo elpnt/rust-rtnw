@@ -1,5 +1,6 @@
 use crate::hitable::HitRecord;
 use crate::ray::Ray;
+use crate::texture::*;
 use crate::vec3::Vec3;
 use rand;
 
@@ -13,14 +14,18 @@ pub trait Material: Send + Sync {
 }
 
 pub struct Lambertian {
-    pub albedo: Vec3,
+    pub albedo: Box<Texture>,
 }
 
 impl Lambertian {
     pub fn new(x: f32, y: f32, z: f32) -> Self {
         Lambertian {
-            albedo: Vec3::new(x, y, z),
+            albedo: Box::new(ConstantTexture::new(x, y, z)),
         }
+    }
+
+    pub fn new_with_texture(albedo: Box<Texture>) -> Self {
+        Lambertian { albedo }
     }
 }
 
@@ -32,7 +37,7 @@ impl Material for Lambertian {
             direction: target - rec.p,
             time: r_in.time,
         };
-        let attenuation: Vec3 = self.albedo;
+        let attenuation: Vec3 = self.albedo.value(0.0, 0.0, &rec.p);
 
         Some(ScatterRecord {
             attenuation,
