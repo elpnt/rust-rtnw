@@ -1,4 +1,4 @@
-use std::ops::{Add, Div, Mul, Neg, Sub};
+use std::ops::{Add, Div, Index, Mul, Neg, Sub};
 use std::ops::{AddAssign, DivAssign};
 
 #[derive(Debug, Default, PartialEq, Copy, Clone)]
@@ -165,6 +165,22 @@ impl Neg for Vec3 {
             x: -self.x,
             y: -self.y,
             z: -self.z,
+        }
+    }
+}
+
+impl Index<usize> for Vec3 {
+    type Output = f32;
+
+    fn index(&self, idx: usize) -> &f32 {
+        match idx {
+            0 => &self.x,
+            1 => &self.y,
+            2 => &self.z,
+            _ => panic!(
+                "Index out of range: index must be 0, 1 or 2. You called {}",
+                idx
+            ),
         }
     }
 }

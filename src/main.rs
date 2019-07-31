@@ -4,6 +4,8 @@ use std::fs;
 use std::io::{BufWriter, Write};
 use std::time::Instant;
 
+mod aabb;
+mod bvh;
 mod camera;
 mod hitable;
 mod hitable_list;

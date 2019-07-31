@@ -1,9 +1,16 @@
+use crate::aabb::*;
 use crate::hitable::{HitRecord, Hitable};
 use crate::ray::Ray;
 use std::sync::Arc;
 
 pub struct HitableList {
     pub hitables: Vec<Arc<Hitable>>,
+}
+
+impl HitableList {
+    pub fn size(&self) -> usize {
+        self.hitables.len()
+    }
 }
 
 impl Hitable for HitableList {
@@ -17,5 +24,25 @@ impl Hitable for HitableList {
             }
         }
         hit_anything
+    }
+
+    fn bounding_box(&self, t0: f32, t1: f32) -> Option<AABB> {
+        if self.size() > 0 {
+            let first_box = self.hitables[0].bounding_box(t0, t1);
+            if let Some(bbox) = first_box {
+                for i in 1..self.size() {
+                    if let Some(temp_box) = self.hitables[i].bounding_box(t0, t1) {
+                        let bbox = surrounding_box(bbox, temp_box);
+                    } else {
+                        return None;
+                    }
+                }
+                Some(bbox)
+            } else {
+                None
+            }
+        } else {
+            None
+        }
     }
 }
