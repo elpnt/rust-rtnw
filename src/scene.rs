@@ -173,24 +173,38 @@ pub fn random_scene_with_motion() -> HitableList {
 }
 
 pub fn two_spheres() -> HitableList {
-    let checker0 = Box::new(CheckerTexture::new(
+    let checker = CheckerTexture::new(
         Box::new(ConstantTexture::new(0.8, 0.1, 0.1)),
-        Box::new(ConstantTexture::new(0.1, 0.1, 0.1)),
-    ));
-    let checker1 = Box::new(CheckerTexture::new(
-        Box::new(ConstantTexture::new(0.7, 0.7, 0.1)),
-        Box::new(ConstantTexture::new(0.1, 0.1, 0.1)),
-    ));
+        Box::new(ConstantTexture::new(0.0, 0.0, 0.0)),
+    );
     let hitables: Vec<Box<Hitable>> = vec![
         Box::new(Sphere {
             center: Vec3::new(0.0, -10.0, 0.0),
             radius: 10.0,
-            material: Box::new(Lambertian::new_with_texture(checker0)),
+            material: Box::new(Lambertian::new_with_texture(Box::new(checker.clone()))),
         }),
         Box::new(Sphere {
             center: Vec3::new(0.0, 10.0, 0.0),
             radius: 10.0,
-            material: Box::new(Lambertian::new_with_texture(checker1)),
+            material: Box::new(Lambertian::new_with_texture(Box::new(checker.clone()))),
+        }),
+    ];
+
+    HitableList { hitables }
+}
+
+pub fn two_perlin_spheres() -> HitableList {
+    let pertext = NoiseTexture::new();
+    let hitables: Vec<Box<Hitable>> = vec![
+        Box::new(Sphere {
+            center: Vec3::new(0.0, -1000.0, 0.0),
+            radius: 1000.0,
+            material: Box::new(Lambertian::new_with_texture(Box::new(pertext.clone()))),
+        }),
+        Box::new(Sphere {
+            center: Vec3::new(0.0, 2.0, 0.0),
+            radius: 2.0,
+            material: Box::new(Lambertian::new_with_texture(Box::new(pertext.clone()))),
         }),
     ];
 

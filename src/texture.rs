@@ -1,7 +1,16 @@
+use crate::perlin::*;
 use crate::vec3::Vec3;
+use std::clone::Clone;
 
 pub trait Texture: Send + Sync {
     fn value(&self, u: f32, v: f32, p: &Vec3) -> Vec3;
+    fn box_clone(&self) -> Box<dyn Texture>;
+}
+
+impl Clone for Box<dyn Texture> {
+    fn clone(&self) -> Self {
+        self.as_ref().box_clone()
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -21,15 +30,19 @@ impl Texture for ConstantTexture {
     fn value(&self, _u: f32, _v: f32, _p: &Vec3) -> Vec3 {
         self.color
     }
+    fn box_clone(&self) -> Box<dyn Texture> {
+        Box::new((*self).clone())
+    }
 }
 
+#[derive(Clone)]
 pub struct CheckerTexture {
-    pub odd: Box<Texture>,
-    pub even: Box<Texture>,
+    pub odd: Box<dyn Texture>,
+    pub even: Box<dyn Texture>,
 }
 
 impl CheckerTexture {
-    pub fn new(odd: Box<Texture>, even: Box<Texture>) -> Self {
+    pub fn new(odd: Box<dyn Texture>, even: Box<dyn Texture>) -> Self {
         CheckerTexture { odd, even }
     }
 }
@@ -42,5 +55,30 @@ impl Texture for CheckerTexture {
         } else {
             self.even.value(u, v, &p)
         }
+    }
+    fn box_clone(&self) -> Box<dyn Texture> {
+        Box::new((*self).clone())
+    }
+}
+
+#[derive(Clone)]
+pub struct NoiseTexture {
+    pub noise: Perlin,
+}
+
+impl NoiseTexture {
+    pub fn new() -> Self {
+        NoiseTexture {
+            noise: Perlin::new(),
+        }
+    }
+}
+
+impl Texture for NoiseTexture {
+    fn value(&self, _u: f32, _v: f32, p: &Vec3) -> Vec3 {
+        Vec3::new(1.0, 1.0, 1.0) * self.noise.noise(p)
+    }
+    fn box_clone(&self) -> Box<dyn Texture> {
+        Box::new((*self).clone())
     }
 }

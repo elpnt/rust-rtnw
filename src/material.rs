@@ -25,7 +25,7 @@ impl Lambertian {
     }
 
     pub fn new_with_texture(albedo: Box<Texture>) -> Self {
-        Lambertian { albedo }
+        Lambertian { albedo: albedo }
     }
 }
 
