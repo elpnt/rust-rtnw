@@ -80,6 +80,29 @@ fn random_in_unit_disk() -> Vec3 {
     p
 }
 
+pub fn camera_for_random_spheres(nx: u32, ny: u32) -> Camera {
+    let lookfrom: Vec3 = Vec3::new(10.0, 1.7, 3.0);
+    let lookat: Vec3 = Vec3::new(0.0, 0.8, 0.0);
+    let vup: Vec3 = Vec3::new(0.0, 1.0, 0.0);
+    let vfov: f32 = 30.0;
+    let aspect: f32 = nx as f32 / ny as f32;
+    let aperture: f32 = 0.05;
+    let dist_to_focus: f32 = (lookfrom - lookat).length();
+    let time0: f32 = 0.0;
+    let time1: f32 = 1.0;
+    Camera::new(
+        lookfrom,
+        lookat,
+        vup,
+        vfov,
+        aspect,
+        aperture,
+        dist_to_focus,
+        time0,
+        time1,
+    )
+}
+
 pub fn camera_for_two_spheres(nx: u32, ny: u32) -> Camera {
     let lookfrom = Vec3::new(13.0, 2.0, 3.0);
     let lookat = Vec3::new(0.0, 0.0, 0.0);

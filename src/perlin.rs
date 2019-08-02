@@ -20,18 +20,16 @@ impl Perlin {
     }
 
     pub fn noise(&self, p: &Vec3) -> f32 {
-        let i: usize = (4 * p.x as usize) & 255;
-        let j: usize = (4 * p.y as usize) & 255;
-        let k: usize = (4 * p.z as usize) & 255;
-        println!("{}, {}, {}", i, j, k);
+        let i = (4.0 * p.x) as usize & 255;
+        let j = (4.0 * p.y) as usize & 255;
+        let k = (4.0 * p.z) as usize & 255;
         self.ranfloat[self.perm_x[i] ^ self.perm_y[j] ^ self.perm_z[k]]
     }
 }
 
 fn perlin_generate() -> Vec<f32> {
     let mut rng = thread_rng();
-    let p: Vec<f32> = (0..256).map(|_| rng.gen::<f32>()).collect();
-    p
+    (0..256).map(|_| rng.gen::<f32>()).collect()
 }
 
 fn perlin_generate_perm() -> Vec<usize> {
@@ -40,3 +38,16 @@ fn perlin_generate_perm() -> Vec<usize> {
     p.shuffle(&mut rng);
     p
 }
+
+/*
+fn trilinear_interp(c: &[[[f32;2];2];2], u: f32, v: f32, w: f32) -> f32 {
+    let accum: f32 = 0.0;
+    for i in 0..2 {
+        for j in 0..2 {
+            for k in 0..2 {
+
+            }
+        }
+    }
+}
+*/

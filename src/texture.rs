@@ -13,7 +13,7 @@ impl Clone for Box<dyn Texture> {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub struct ConstantTexture {
     pub color: Vec3,
 }
@@ -76,7 +76,7 @@ impl NoiseTexture {
 
 impl Texture for NoiseTexture {
     fn value(&self, _u: f32, _v: f32, p: &Vec3) -> Vec3 {
-        Vec3::new(1.0, 1.0, 1.0) * self.noise.noise(p)
+        Vec3::new(1.0, 1.0, 1.0) * self.noise.noise(&p)
     }
     fn box_clone(&self) -> Box<dyn Texture> {
         Box::new((*self).clone())

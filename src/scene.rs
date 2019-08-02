@@ -8,7 +8,7 @@ use crate::vec3::Vec3;
 use rand::prelude::*;
 
 pub fn random_scene() -> HitableList {
-    let mut hitables: Vec<Box<Hitable>> = vec![];
+    let mut hitables: Vec<Box<dyn Hitable>> = vec![];
     let mut rng = rand::thread_rng();
 
     // earth
@@ -87,7 +87,7 @@ pub fn random_scene() -> HitableList {
 }
 
 pub fn random_scene_with_motion() -> HitableList {
-    let mut hitables: Vec<Box<Hitable>> = vec![];
+    let mut hitables: Vec<Box<dyn Hitable>> = vec![];
     let mut rng = rand::thread_rng();
 
     // earth
@@ -177,7 +177,7 @@ pub fn two_spheres() -> HitableList {
         Box::new(ConstantTexture::new(0.8, 0.1, 0.1)),
         Box::new(ConstantTexture::new(0.0, 0.0, 0.0)),
     );
-    let hitables: Vec<Box<Hitable>> = vec![
+    let hitables: Vec<Box<dyn Hitable>> = vec![
         Box::new(Sphere {
             center: Vec3::new(0.0, -10.0, 0.0),
             radius: 10.0,
@@ -195,7 +195,7 @@ pub fn two_spheres() -> HitableList {
 
 pub fn two_perlin_spheres() -> HitableList {
     let pertext = NoiseTexture::new();
-    let hitables: Vec<Box<Hitable>> = vec![
+    let hitables: Vec<Box<dyn Hitable>> = vec![
         Box::new(Sphere {
             center: Vec3::new(0.0, -1000.0, 0.0),
             radius: 1000.0,
