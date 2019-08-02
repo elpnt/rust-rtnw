@@ -194,7 +194,7 @@ pub fn two_spheres() -> HitableList {
 }
 
 pub fn two_perlin_spheres() -> HitableList {
-    let pertext = NoiseTexture::new();
+    let pertext = NoiseTexture::new(20.0);
     let hitables: Vec<Box<dyn Hitable>> = vec![
         Box::new(Sphere {
             center: Vec3::new(0.0, -1000.0, 0.0),
