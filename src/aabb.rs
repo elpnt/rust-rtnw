@@ -14,10 +14,10 @@ impl AABB {
 
     pub fn hit(&self, r: &Ray, tmin: f32, tmax: f32) -> Option<bool> {
         for a in 0..3 {
-            let invD: f32 = 1.0 / r.direction[a];
-            let mut t0: f32 = self.min[a] - r.origin[a] * invD;
-            let mut t1: f32 = self.max[a] - r.origin[a] * invD;
-            if invD < 0.0 {
+            let inv_d: f32 = 1.0 / r.direction[a];
+            let mut t0: f32 = self.min[a] - r.origin[a] * inv_d;
+            let mut t1: f32 = self.max[a] - r.origin[a] * inv_d;
+            if inv_d < 0.0 {
                 std::mem::swap(&mut t0, &mut t1);
             }
             let tmin: f32 = if t0 > tmin { t0 } else { tmin };

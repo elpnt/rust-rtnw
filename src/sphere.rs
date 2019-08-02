@@ -9,11 +9,11 @@ use std::borrow::Borrow;
 pub struct Sphere {
     pub center: Vec3,
     pub radius: f32,
-    pub material: Box<Material>,
+    pub material: Box<dyn Material>,
 }
 
 impl Sphere {
-    pub fn new(center: Vec3, radius: f32, material: Box<Material>) -> Self {
+    pub fn new(center: Vec3, radius: f32, material: Box<dyn Material>) -> Self {
         Sphere {
             center,
             radius,
@@ -72,7 +72,7 @@ pub struct MovingSphere {
     pub time0: f32,
     pub time1: f32,
     pub radius: f32,
-    pub material: Box<Material>,
+    pub material: Box<dyn Material>,
 }
 
 impl MovingSphere {
@@ -82,7 +82,7 @@ impl MovingSphere {
         time0: f32,
         time1: f32,
         radius: f32,
-        material: Box<Material>,
+        material: Box<dyn Material>,
     ) -> Self {
         MovingSphere {
             center0,

@@ -5,11 +5,11 @@ use std::io::{BufWriter, Write};
 use std::time::Instant;
 
 mod aabb;
-mod bvh;
 mod camera;
 mod hitable;
 mod hitable_list;
 mod material;
+mod perlin;
 mod ray;
 mod scene;
 mod sphere;
@@ -47,37 +47,16 @@ fn main() {
     let ns: u32 = 50; // number of samples inside each pixel
 
     // Objects setup
-    let world = scene::two_spheres();
+    // let world = scene::two_spheres();
+    let world = scene::two_perlin_spheres();
 
     // Camera setup
-    /*
-    let lookfrom: Vec3 = Vec3::new(10.0, 1.7, 3.0);
-    let lookat: Vec3 = Vec3::new(0.0, 0.8, 0.0);
-    let vup: Vec3 = Vec3::new(0.0, 1.0, 0.0);
-    let vfov: f32 = 30.0;
-    let aspect: f32 = nx as f32 / ny as f32;
-    let aperture: f32 = 0.05;
-    let dist_to_focus: f32 = (lookfrom - lookat).length();
-    let time0: f32 = 0.0;
-    let time1: f32 = 1.0;
-    let cam = Camera::new(
-        lookfrom,
-        lookat,
-        vup,
-        vfov,
-        aspect,
-        aperture,
-        dist_to_focus,
-        time0,
-        time1,
-    );
-    */
     let cam = camera::camera_for_two_spheres(nx, ny);
 
     // Parallell process
     let start = Instant::now();
 
-    let mut f = BufWriter::new(fs::File::create("./output/two_spheres.ppm").unwrap());
+    let mut f = BufWriter::new(fs::File::create("./output/perlin_parallel.ppm").unwrap());
     f.write_all(format!("P3\n{} {}\n255\n", nx, ny).as_bytes())
         .unwrap();
 
@@ -121,4 +100,28 @@ fn main() {
 
     let duration = start.elapsed();
     println!("Time elapsed in parallel process is: {:?}", duration);
+
+    /* Single thread process
+    for j in (0..ny).rev() {
+        for i in 0..nx {
+            let mut col = Vec3::new(0.0, 0.0, 0.0);
+            for _ in 0..ns {
+                let u = (i as f32 + rand::random::<f32>()) / nx as f32;
+                let v = (j as f32 + rand::random::<f32>()) / ny as f32;
+                let r: Ray = cam.get_ray(u, v);
+                let c = color(&r, &world, 0);
+                col += c;
+            }
+
+            col /= ns as f32;
+            col = Vec3::new(col.x.sqrt(), col.y.sqrt(), col.z.sqrt());
+            let ir = (255.99 * col.x) as i32;
+            let ig = (255.99 * col.y) as i32;
+            let ib = (255.99 * col.z) as i32;
+
+            f.write(format!("{} {} {}\n", ir, ig, ib).as_bytes())
+                .unwrap();
+        }
+    }
+    */
 }

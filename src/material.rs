@@ -14,7 +14,7 @@ pub trait Material: Send + Sync {
 }
 
 pub struct Lambertian {
-    pub albedo: Box<Texture>,
+    pub albedo: Box<dyn Texture>,
 }
 
 impl Lambertian {
@@ -24,8 +24,8 @@ impl Lambertian {
         }
     }
 
-    pub fn new_with_texture(albedo: Box<Texture>) -> Self {
-        Lambertian { albedo }
+    pub fn new_with_texture(albedo: Box<dyn Texture>) -> Self {
+        Lambertian { albedo: albedo }
     }
 }
 
@@ -52,7 +52,6 @@ pub struct Metal {
 }
 
 impl Metal {
-    // pub fn new(x: f32, y: f32, z: f32, fuzz: f32) -> Self {
     pub fn new(v: (f32, f32, f32), fuzz: f32) -> Self {
         Metal {
             albedo: Vec3::new(v.0, v.1, v.2),
