@@ -1,5 +1,5 @@
 use std::ops::{Add, Div, Index, Mul, Neg, Sub};
-use std::ops::{AddAssign, DivAssign};
+use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
 #[derive(Debug, Default, PartialEq, Copy, Clone)]
 pub struct Vec3 {
@@ -21,8 +21,17 @@ macro_rules! vec3 {
 
 impl Vec3 {
     // Make new Vecor
-    pub fn new(x: f32, y: f32, z: f32) -> Vec3 {
+    pub fn new(x: f32, y: f32, z: f32) -> Self {
         Vec3 { x, y, z }
+    }
+
+    // Make new Vector initialized all elements filled with 0
+    pub fn zeros() -> Self {
+        Vec3 {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        }
     }
 
     // Get length
@@ -73,16 +82,6 @@ impl Add for Vec3 {
             y: self.y + other.y,
             z: self.z + other.z,
         }
-    }
-}
-
-impl AddAssign for Vec3 {
-    fn add_assign(&mut self, other: Self) {
-        *self = Self {
-            x: self.x + other.x,
-            y: self.y + other.y,
-            z: self.z + other.z,
-        };
     }
 }
 
@@ -143,6 +142,36 @@ impl Div<f32> for Vec3 {
             x: self.x / coef,
             y: self.y / coef,
             z: self.z / coef,
+        }
+    }
+}
+
+impl AddAssign for Vec3 {
+    fn add_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x + other.x,
+            y: self.y + other.y,
+            z: self.z + other.z,
+        };
+    }
+}
+
+impl SubAssign for Vec3 {
+    fn sub_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x - other.x,
+            y: self.y - other.y,
+            z: self.z - other.z,
+        }
+    }
+}
+
+impl MulAssign<f32> for Vec3 {
+    fn mul_assign(&mut self, coef: f32) {
+        *self = Self {
+            x: self.x * coef,
+            y: self.y * coef,
+            z: self.z * coef,
         }
     }
 }

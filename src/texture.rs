@@ -64,19 +64,26 @@ impl Texture for CheckerTexture {
 #[derive(Clone)]
 pub struct NoiseTexture {
     pub noise: Perlin,
+    pub scale: f32,
 }
 
 impl NoiseTexture {
-    pub fn new() -> Self {
+    pub fn new(scale: f32) -> Self {
         NoiseTexture {
             noise: Perlin::new(),
+            scale,
         }
     }
 }
 
 impl Texture for NoiseTexture {
     fn value(&self, _u: f32, _v: f32, p: &Vec3) -> Vec3 {
-        Vec3::new(1.0, 1.0, 1.0) * self.noise.noise(&p)
+        // Vec3::make_unit_vector() * self.noise.noise(&(*p * self.scale))
+
+        // marble-like texture
+        Vec3::make_unit_vector()
+            * 0.5
+            * (1.0 + (self.scale * p.z + 10.0 * self.noise.turbulence(&p, 7)).sin())
     }
     fn box_clone(&self) -> Box<dyn Texture> {
         Box::new((*self).clone())
