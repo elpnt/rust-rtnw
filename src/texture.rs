@@ -120,20 +120,6 @@ impl Texture for ImageTexture {
         let g = self.data[idx + 1] as f32 / 255.0;
         let b = self.data[idx + 2] as f32 / 255.0;
         Vec3::new(r, g, b)
-
-        /*
-        let mut i = u * self.nx as f32;
-        let mut j = (1.0 - v) * self.ny as f32 - 0.001;
-        i = clamp(i, self.nx as f32 - 1.0);
-        j = clamp(j, self.ny as f32 - 1.0);
-        let r: f32 =
-            (self.data[(3.0 * i + 3.0 * self.nx as f32 * j) as usize] as f32 / 255.0);
-        let g: f32 =
-            (self.data[(3.0 * i + 3.0 * self.nx as f32 * j + 1.0) as usize] as f32 / 255.0);
-        let b: f32 =
-            (self.data[(3.0 * i + 3.0 * self.nx as f32 * j + 2.0) as usize] as f32 / 255.0);
-        Vec3::new(r, g, b)
-        */
     }
 
     fn box_clone(&self) -> Box<dyn Texture> {
