@@ -6,6 +6,7 @@ use std::time::Instant;
 
 mod aabb;
 mod camera;
+mod color;
 mod hitable;
 mod hitable_list;
 mod material;
@@ -16,30 +17,11 @@ mod sphere;
 mod texture;
 mod vec3;
 
+use color::color;
 use hitable::Hitable;
 use hitable_list::HitableList;
 use ray::Ray;
 use vec3::Vec3;
-
-fn color(r: &Ray, world: &HitableList, depth: u32) -> Vec3 {
-    if let Some(rec) = world.hit(&r, 0.001, std::f32::MAX) {
-        if let Some(scatter_record) = rec.material.scatter(&r, &rec) {
-            if depth < 50 {
-                let attenuation: Vec3 = scatter_record.attenuation;
-                let scattered: Ray = scatter_record.scattered;
-                attenuation * color(&scattered, &world, depth + 1)
-            } else {
-                Vec3::new(0.0, 0.0, 0.0)
-            }
-        } else {
-            Vec3::new(0.0, 0.0, 0.0)
-        }
-    } else {
-        let unit_direction: Vec3 = r.direction.unit_vector();
-        let t: f32 = 0.5 * (unit_direction.y + 1.0);
-        (1.0 - t) * Vec3::new(1.0, 1.0, 1.0) + t * Vec3::new(0.5, 0.7, 1.0)
-    }
-}
 
 fn main() {
     let nx: u32 = 400;
