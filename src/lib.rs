@@ -1,4 +1,5 @@
 pub mod aabb;
+pub mod color;
 pub mod perlin;
 pub mod texture;
 pub mod bvh;
