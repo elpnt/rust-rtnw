@@ -13,3 +13,7 @@ Ray Tracing -The Next Week- written in Rust
 ### Ch4: Perlin Noise
 
 ![Perlin Noise](./png/perlin_turbulence.png)
+
+### Ch5: Image Texture
+
+![](./png/image_texture.png)
