@@ -5,6 +5,7 @@ use crate::ray::Ray;
 use crate::vec3::Vec3;
 
 use std::borrow::Borrow;
+use std::f32::consts::PI;
 
 pub struct Sphere {
     pub center: Vec3,
@@ -42,8 +43,11 @@ impl Hitable for Sphere {
                 let t: f32 = if b1 { temp1 } else { temp2 };
                 let p: Vec3 = r.point_at_parameter(t);
                 let normal: Vec3 = (p - self.center) / self.radius;
+                let (u, v) = get_sphere_uv(&normal);
                 Some(HitRecord {
                     t,
+                    u,
+                    v,
                     p,
                     normal,
                     material: self.material.borrow(),
@@ -119,8 +123,11 @@ impl Hitable for MovingSphere {
                 let t: f32 = if b1 { temp1 } else { temp2 };
                 let p: Vec3 = r.point_at_parameter(t);
                 let normal: Vec3 = (p - self.center_at_time(r.time)) / self.radius;
+                let (u, v) = get_sphere_uv(&normal);
                 Some(HitRecord {
                     t,
+                    u,
+                    v,
                     p,
                     normal,
                     material: self.material.borrow(),
@@ -147,4 +154,12 @@ impl Hitable for MovingSphere {
         let sbox = surrounding_box(bbox0, bbox1);
         Some(sbox)
     }
+}
+
+fn get_sphere_uv(p: &Vec3) -> (f32, f32) {
+    let phi: f32 = p.z.atan2(p.x);
+    let thera: f32 = p.y.asin();
+    let u: f32 = 1.0 - (phi + PI) / (2.0 * PI);
+    let v: f32 = (thera + PI / 2.0) / PI;
+    (u, v)
 }

@@ -2,6 +2,7 @@ use crate::hitable::HitRecord;
 use crate::ray::Ray;
 use crate::texture::*;
 use crate::vec3::Vec3;
+
 use rand;
 
 pub struct ScatterRecord {
@@ -13,6 +14,7 @@ pub trait Material: Send + Sync {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<ScatterRecord>;
 }
 
+#[derive(Clone)]
 pub struct Lambertian {
     pub albedo: Box<dyn Texture>,
 }
@@ -37,7 +39,8 @@ impl Material for Lambertian {
             direction: target - rec.p,
             time: r_in.time,
         };
-        let attenuation: Vec3 = self.albedo.value(0.0, 0.0, &rec.p);
+        // let attenuation: Vec3 = self.albedo.value(0.0, 0.0, &rec.p);
+        let attenuation: Vec3 = self.albedo.value(rec.u, rec.v, &rec.p);
 
         Some(ScatterRecord {
             attenuation,
@@ -46,6 +49,7 @@ impl Material for Lambertian {
     }
 }
 
+#[derive(Clone)]
 pub struct Metal {
     pub albedo: Vec3,
     pub fuzz: f32,
@@ -99,6 +103,7 @@ fn reflect(v: Vec3, n: Vec3) -> Vec3 {
     v - 2.0 * v.dot(&n) * n
 }
 
+#[derive(Clone)]
 pub struct Dielectric {
     pub refract_idx: f32,
 }
