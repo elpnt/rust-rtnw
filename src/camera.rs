@@ -104,7 +104,7 @@ pub fn camera_for_random_spheres(nx: u32, ny: u32) -> Camera {
 }
 
 pub fn camera_for_two_spheres(nx: u32, ny: u32) -> Camera {
-    let lookfrom = Vec3::new(17.0, 5.0, 5.0);
+    let lookfrom = Vec3::new(20.0, 5.0, 10.0);
     let lookat = Vec3::new(0.0, 2.0, 0.0);
     let dist_to_focus: f32 = 10.0;
     let aperture: f32 = 0.0;
