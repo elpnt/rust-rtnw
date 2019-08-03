@@ -5,6 +5,7 @@ use crate::sphere::{MovingSphere, Sphere};
 use crate::texture::*;
 use crate::vec3::Vec3;
 
+use image;
 use rand::prelude::*;
 
 pub fn random_scene() -> HitableList {
@@ -205,6 +206,28 @@ pub fn two_perlin_spheres() -> HitableList {
             center: Vec3::new(0.0, 2.0, 0.0),
             radius: 2.0,
             material: Box::new(Lambertian::new_with_texture(Box::new(pertext.clone()))),
+        }),
+    ];
+
+    HitableList { hitables }
+}
+
+pub fn earth() -> HitableList {
+    let image_data = image::open("./texture/earth.jpg").unwrap().to_rgb();
+    let (nx, ny): (u32, u32) = image_data.dimensions();
+    let texture_data: Vec<u8> = image_data.into_raw();
+    let image_texture = ImageTexture::new(texture_data, nx, ny);
+    let pertext = NoiseTexture::new(18.0);
+    let hitables: Vec<Box<dyn Hitable>> = vec![
+        Box::new(Sphere {
+            center: Vec3::new(0.0, -1000.0, 0.0),
+            radius: 1000.0,
+            material: Box::new(Lambertian::new_with_texture(Box::new(pertext))),
+        }),
+        Box::new(Sphere {
+            center: Vec3::new(0.0, 2.0, 0.0),
+            radius: 2.0,
+            material: Box::new(Lambertian::new_with_texture(Box::new(image_texture))),
         }),
     ];
 

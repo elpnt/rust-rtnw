@@ -47,7 +47,7 @@ fn main() {
     let ns: u32 = 50; // number of samples inside each pixel
 
     // Objects setup
-    let world = scene::two_perlin_spheres();
+    let world = scene::earth();
 
     // Camera setup
     let cam = camera::camera_for_two_spheres(nx, ny);
@@ -55,7 +55,7 @@ fn main() {
     // Parallell process
     let start = Instant::now();
 
-    let mut f = BufWriter::new(fs::File::create("./output/perlin_camouflage.ppm").unwrap());
+    let mut f = BufWriter::new(fs::File::create("./output/image_texture.ppm").unwrap());
     f.write_all(format!("P3\n{} {}\n255\n", nx, ny).as_bytes())
         .unwrap();
 
