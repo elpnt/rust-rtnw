@@ -121,3 +121,25 @@ pub fn camera_for_two_spheres(nx: u32, ny: u32) -> Camera {
         0.0,
     )
 }
+
+pub fn camera_for_cornell_box(nx: u32, ny: u32) -> Camera {
+    let lookfrom = Vec3::new(278.0, 278.0, -800.0);
+    let lookat = Vec3::new(278.0, 278.0, 0.0);
+    let dist_to_focus: f32 = 10.0;
+    let aperture: f32 = 0.0;
+    let vfov: f32 = 40.0;
+    let vup = Vec3::new(0.0, 1.0, 0.0);
+    let aspect = nx as f32 / ny as f32;
+
+    Camera::new(
+        lookfrom,
+        lookat,
+        vup,
+        vfov,
+        aspect,
+        aperture,
+        dist_to_focus,
+        0.0,
+        1.0,
+    )
+}

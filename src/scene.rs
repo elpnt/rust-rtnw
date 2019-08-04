@@ -1,7 +1,7 @@
 use crate::hitable::*;
 use crate::hitable_list::HitableList;
 use crate::material::*;
-use crate::rectangle::Rectangle;
+use crate::rectangle::*;
 use crate::sphere::{MovingSphere, Sphere};
 use crate::texture::*;
 use crate::vec3::Vec3;
@@ -248,14 +248,8 @@ pub fn simple_light() -> HitableList {
             2.0,
             Box::new(Lambertian::new_with_texture(Box::new(pertext.clone()))),
         )),
-        /*
-        Box::new(Sphere::new(
-            Vec3::new(0.0, 7.0, 0.0),
-            2.0,
-            Box::new(Light::new(Box::new(ConstantTexture::new(4.0, 4.0, 4.0)))),
-        )),
-        */
         Box::new(Rectangle::new(
+            Plane::XY,
             3.0,
             5.0,
             1.0,
@@ -265,5 +259,70 @@ pub fn simple_light() -> HitableList {
         )),
     ];
 
+    HitableList { hitables }
+}
+
+pub fn cornell_box() -> HitableList {
+    let red = Lambertian::new(0.65, 0.05, 0.05);
+    let white = Lambertian::new(0.73, 0.73, 0.73);
+    let green = Lambertian::new(0.12, 0.45, 0.15);
+    let light = Light::new(Box::new(ConstantTexture::new(15.0, 15.0, 15.0)));
+
+    let hitables: Vec<Box<Hitable>> = vec![
+        Box::new(FlipNormals::new(Box::new(Rectangle::new(
+            Plane::YZ,
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            555.0,
+            Box::new(green),
+        )))),
+        Box::new(Rectangle::new(
+            Plane::YZ,
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            0.0,
+            Box::new(red),
+        )),
+        Box::new(Rectangle::new(
+            Plane::ZX,
+            227.0,
+            332.0,
+            213.0,
+            343.0,
+            554.0,
+            Box::new(light),
+        )),
+        Box::new(FlipNormals::new(Box::new(Rectangle::new(
+            Plane::ZX,
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            555.0,
+            Box::new(white.clone()),
+        )))),
+        Box::new(Rectangle::new(
+            Plane::ZX,
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            0.0,
+            Box::new(white.clone()),
+        )),
+        Box::new(FlipNormals::new(Box::new(Rectangle::new(
+            Plane::XY,
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            555.0,
+            Box::new(white.clone()),
+        )))),
+    ];
     HitableList { hitables }
 }
