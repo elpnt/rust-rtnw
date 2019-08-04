@@ -268,8 +268,8 @@ pub fn cornell_box() -> HitableList {
     let green = Lambertian::new(0.12, 0.45, 0.15);
     let light = Light::new(Box::new(ConstantTexture::new(15.0, 15.0, 15.0)));
 
-    let mut hitables: Vec<Box<Hitable>> = vec![
-        Box::new(Rectangle::new(
+    let hitables: Vec<Box<Hitable>> = vec![
+        Box::new(FlipNormals::new(Box::new(Rectangle::new(
             Plane::YZ,
             0.0,
             555.0,
@@ -277,7 +277,7 @@ pub fn cornell_box() -> HitableList {
             555.0,
             555.0,
             Box::new(green),
-        )),
+        )))),
         Box::new(Rectangle::new(
             Plane::YZ,
             0.0,
@@ -289,13 +289,22 @@ pub fn cornell_box() -> HitableList {
         )),
         Box::new(Rectangle::new(
             Plane::ZX,
-            213.0,
-            343.0,
             227.0,
             332.0,
+            213.0,
+            343.0,
             554.0,
             Box::new(light),
         )),
+        Box::new(FlipNormals::new(Box::new(Rectangle::new(
+            Plane::ZX,
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            555.0,
+            Box::new(white.clone()),
+        )))),
         Box::new(Rectangle::new(
             Plane::ZX,
             0.0,
@@ -305,7 +314,7 @@ pub fn cornell_box() -> HitableList {
             0.0,
             Box::new(white.clone()),
         )),
-        Box::new(Rectangle::new(
+        Box::new(FlipNormals::new(Box::new(Rectangle::new(
             Plane::XY,
             0.0,
             555.0,
@@ -313,7 +322,7 @@ pub fn cornell_box() -> HitableList {
             555.0,
             555.0,
             Box::new(white.clone()),
-        )),
+        )))),
     ];
     HitableList { hitables }
 }

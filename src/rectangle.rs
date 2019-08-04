@@ -45,10 +45,10 @@ impl Rectangle {
 
 impl Hitable for Rectangle {
     fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
-        let (a_axis, b_axis, k_axis): (usize, usize, usize) = match self.plane {
-            XY => (0, 1, 2),
-            YZ => (1, 2, 0),
-            ZX => (2, 0, 1),
+        let (a_axis, b_axis, k_axis) = match &self.plane {
+            Plane::XY => (0, 1, 2),
+            Plane::YZ => (1, 2, 0),
+            Plane::ZX => (2, 0, 1),
         };
         let t: f32 = (self.k - r.origin[k_axis]) / r.direction[k_axis];
         if t < t_min || t > t_max {
@@ -62,7 +62,12 @@ impl Hitable for Rectangle {
                 let u: f32 = (a - self.a0) / (self.a1 - self.a0);
                 let v: f32 = (b - self.b0) / (self.b1 - self.b0);
                 let p: Vec3 = r.point_at_parameter(t);
-                let normal: Vec3 = Vec3::new(0.0, 0.0, 1.0);
+                let normal = match k_axis {
+                    0 => Vec3::new(1.0, 0.0, 0.0),
+                    1 => Vec3::new(0.0, 1.0, 0.0),
+                    2 => Vec3::new(0.0, 0.0, 1.0),
+                    _ => panic!(),
+                };
                 Some(HitRecord {
                     t,
                     u,

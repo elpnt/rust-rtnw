@@ -5,7 +5,6 @@ use std::io::{BufWriter, Write};
 use std::time::Instant;
 
 mod aabb;
-mod rectangle;
 mod camera;
 mod color;
 mod hitable;
@@ -13,6 +12,7 @@ mod hitable_list;
 mod material;
 mod perlin;
 mod ray;
+mod rectangle;
 mod scene;
 mod sphere;
 mod texture;
@@ -26,19 +26,19 @@ use vec3::Vec3;
 
 fn main() {
     let nx: u32 = 400;
-    let ny: u32 = 300;
+    let ny: u32 = 400;
     let ns: u32 = 100; // number of samples inside each pixel
 
     // Objects setup
-    let world = scene::simple_light();
+    let world = scene::cornell_box();
 
     // Camera setup
-    let cam = camera::camera_for_two_spheres(nx, ny);
+    let cam = camera::camera_for_cornell_box(nx, ny);
 
     // Parallell process
     let start = Instant::now();
 
-    let mut f = BufWriter::new(fs::File::create("./output/light.ppm").unwrap());
+    let mut f = BufWriter::new(fs::File::create("./output/cornell.ppm").unwrap());
     f.write_all(format!("P3\n{} {}\n255\n", nx, ny).as_bytes())
         .unwrap();
 
