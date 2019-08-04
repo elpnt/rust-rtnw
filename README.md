@@ -17,3 +17,7 @@ Ray Tracing -The Next Week- written in Rust
 ### Ch5: Image Texture
 
 ![](./png/image_texture.png)
+
+### Ch6: Cornell Box
+
+![](./png/cornell.png)
