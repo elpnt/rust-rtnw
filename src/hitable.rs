@@ -10,7 +10,7 @@ pub struct HitRecord<'a> {
     pub v: f32,
     pub p: Vec3,
     pub normal: Vec3,
-    pub material: &'a dyn Material
+    pub material: &'a dyn Material,
 }
 
 // `Hitalbe` trait needs `Send` and `Sync` for `rayon` parallel processing.

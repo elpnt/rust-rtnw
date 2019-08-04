@@ -1,6 +1,7 @@
 use crate::hitable::*;
 use crate::hitable_list::HitableList;
 use crate::material::*;
+use crate::rectangle::Rectangle;
 use crate::sphere::{MovingSphere, Sphere};
 use crate::texture::*;
 use crate::vec3::Vec3;
@@ -74,7 +75,7 @@ pub fn random_scene() -> HitableList {
         material: Box::new(Dielectric::new(1.5)),
     }));
     hitables.push(Box::new(Sphere {
-        center: Vec3::new(-4.0, 1.0, 0.0),
+        center: Vec3::new(4.0, 1.0, 0.0),
         radius: 1.0,
         material: Box::new(Lambertian::new(0.4, 0.2, 0.1)),
     }));
@@ -160,7 +161,7 @@ pub fn random_scene_with_motion() -> HitableList {
         material: Box::new(Dielectric::new(1.5)),
     }));
     hitables.push(Box::new(Sphere {
-        center: Vec3::new(-4.0, 1.0, 0.0),
+        center: Vec3::new(4.0, 1.0, 0.0),
         radius: 1.0,
         material: Box::new(Lambertian::new(0.2, 0.6, 0.8)),
     }));
@@ -229,6 +230,39 @@ pub fn earth() -> HitableList {
             radius: 2.0,
             material: Box::new(Lambertian::new_with_texture(Box::new(image_texture))),
         }),
+    ];
+
+    HitableList { hitables }
+}
+
+pub fn simple_light() -> HitableList {
+    let pertext = NoiseTexture::new(4.0);
+    let hitables: Vec<Box<dyn Hitable>> = vec![
+        Box::new(Sphere::new(
+            Vec3::new(0.0, -1000.0, 0.0),
+            1000.0,
+            Box::new(Lambertian::new_with_texture(Box::new(pertext.clone()))),
+        )),
+        Box::new(Sphere::new(
+            Vec3::new(0.0, 2.0, 0.0),
+            2.0,
+            Box::new(Lambertian::new_with_texture(Box::new(pertext.clone()))),
+        )),
+        /*
+        Box::new(Sphere::new(
+            Vec3::new(0.0, 7.0, 0.0),
+            2.0,
+            Box::new(Light::new(Box::new(ConstantTexture::new(4.0, 4.0, 4.0)))),
+        )),
+        */
+        Box::new(Rectangle::new(
+            3.0,
+            5.0,
+            1.0,
+            3.0,
+            -2.0,
+            Box::new(Light::new(Box::new(ConstantTexture::new(4.0, 4.0, 4.0)))),
+        )),
     ];
 
     HitableList { hitables }

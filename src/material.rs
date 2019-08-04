@@ -12,6 +12,7 @@ pub struct ScatterRecord {
 
 pub trait Material: Send + Sync {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<ScatterRecord>;
+    fn emitted(&self, u: f32, v: f32, p: &Vec3) -> Vec3;
 }
 
 #[derive(Clone)]
@@ -46,6 +47,10 @@ impl Material for Lambertian {
             attenuation,
             scattered,
         })
+    }
+
+    fn emitted(&self, _u: f32, _v: f32, _p: &Vec3) -> Vec3 {
+        Vec3::zeros()
     }
 }
 
@@ -83,6 +88,10 @@ impl Material for Metal {
         } else {
             None
         }
+    }
+
+    fn emitted(&self, _u: f32, _v: f32, _p: &Vec3) -> Vec3 {
+        Vec3::zeros()
     }
 }
 
@@ -155,6 +164,10 @@ impl Material for Dielectric {
             }),
         }
     }
+
+    fn emitted(&self, _u: f32, _v: f32, _p: &Vec3) -> Vec3 {
+        Vec3::zeros()
+    }
 }
 
 fn refract(v: &Vec3, n: &Vec3, ni_over_nt: f32) -> Option<Vec3> {
@@ -173,4 +186,25 @@ fn schlick(cosine: f32, refract_idx: f32) -> f32 {
     let mut r0: f32 = (1.0 - refract_idx) / (1.0 + refract_idx);
     r0 = r0 * r0;
     r0 + (1.0 - r0) * ((1.0 - cosine).powi(5))
+}
+
+#[derive(Clone)]
+pub struct Light {
+    pub emit: Box<dyn Texture>,
+}
+
+impl Light {
+    pub fn new(emit: Box<dyn Texture>) -> Self {
+        Light { emit }
+    }
+}
+
+impl Material for Light {
+    fn scatter(&self, _r_in: &Ray, _rec: &HitRecord) -> Option<ScatterRecord> {
+        None
+    }
+
+    fn emitted(&self, u: f32, v: f32, p: &Vec3) -> Vec3 {
+        self.emit.value(u, v, &p)
+    }
 }
