@@ -27,7 +27,7 @@ use vec3::Vec3;
 fn main() {
     let nx: u32 = 400;
     let ny: u32 = 400;
-    let ns: u32 = 100; // number of samples inside each pixel
+    let ns: u32 = 100;
 
     // Objects setup
     let world = scene::cornell_box();
