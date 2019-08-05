@@ -255,7 +255,7 @@ pub fn simple_light() -> HitableList {
             1.0,
             3.0,
             -2.0,
-            Box::new(Light::new(Box::new(ConstantTexture::new(4.0, 4.0, 4.0)))),
+            Box::new(DiffuseLight::new(4.0, 4.0, 4.0)),
         )),
     ];
 
@@ -266,7 +266,7 @@ pub fn cornell_box() -> HitableList {
     let red = Lambertian::new(0.65, 0.05, 0.05);
     let white = Lambertian::new(0.73, 0.73, 0.73);
     let green = Lambertian::new(0.12, 0.45, 0.15);
-    let light = Light::new(Box::new(ConstantTexture::new(15.0, 15.0, 15.0)));
+    let light = DiffuseLight::new(15.0, 15.0, 15.0);
 
     let hitables: Vec<Box<Hitable>> = vec![
         Box::new(FlipNormals::new(Box::new(Rectangle::new(
