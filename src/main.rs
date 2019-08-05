@@ -5,6 +5,7 @@ use std::io::{BufWriter, Write};
 use std::time::Instant;
 
 mod aabb;
+mod block;
 mod camera;
 mod color;
 mod hitable;
@@ -30,7 +31,7 @@ fn main() {
     let ns: u32 = 100;
 
     // Objects setup
-    let world = scene::cornell_box();
+    let world = scene::blocks();
 
     // Camera setup
     let cam = camera::camera_for_cornell_box(nx, ny);

@@ -1,3 +1,4 @@
+use crate::block::*;
 use crate::hitable::*;
 use crate::hitable_list::HitableList;
 use crate::material::*;
@@ -323,6 +324,82 @@ pub fn cornell_box() -> HitableList {
             555.0,
             Box::new(white.clone()),
         )))),
+    ];
+    HitableList { hitables }
+}
+
+pub fn blocks() -> HitableList {
+    let red = Lambertian::new(0.65, 0.05, 0.05);
+    let white = Lambertian::new(0.73, 0.73, 0.73);
+    let green = Lambertian::new(0.12, 0.45, 0.15);
+    let light = DiffuseLight::new(15.0, 15.0, 15.0);
+
+    let hitables: Vec<Box<Hitable>> = vec![
+        Box::new(FlipNormals::new(Box::new(Rectangle::new(
+            Plane::YZ,
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            555.0,
+            Box::new(green),
+        )))),
+        Box::new(Rectangle::new(
+            Plane::YZ,
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            0.0,
+            Box::new(red),
+        )),
+        Box::new(Rectangle::new(
+            Plane::ZX,
+            227.0,
+            332.0,
+            213.0,
+            343.0,
+            554.0,
+            Box::new(light),
+        )),
+        Box::new(FlipNormals::new(Box::new(Rectangle::new(
+            Plane::ZX,
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            555.0,
+            Box::new(white.clone()),
+        )))),
+        Box::new(Rectangle::new(
+            Plane::ZX,
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            0.0,
+            Box::new(white.clone()),
+        )),
+        Box::new(FlipNormals::new(Box::new(Rectangle::new(
+            Plane::XY,
+            0.0,
+            555.0,
+            0.0,
+            555.0,
+            555.0,
+            Box::new(white.clone()),
+        )))),
+        Box::new(Block::new(
+            Vec3::new(130.0, 0.0, 65.0),
+            Vec3::new(295.0, 165.0, 230.0),
+            Box::new(white.clone()),
+        )),
+
+        Box::new(Block::new(
+            Vec3::new(265.0, 0.0, 295.0),
+            Vec3::new(430.0, 330.0, 460.0),
+            Box::new(white.clone()),
+        )),
     ];
     HitableList { hitables }
 }
