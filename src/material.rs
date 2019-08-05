@@ -4,6 +4,7 @@ use crate::texture::*;
 use crate::vec3::Vec3;
 
 use rand;
+use std::clone::Clone;
 
 pub struct ScatterRecord {
     pub attenuation: Vec3,
@@ -13,6 +14,13 @@ pub struct ScatterRecord {
 pub trait Material: Send + Sync {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<ScatterRecord>;
     fn emitted(&self, u: f32, v: f32, p: &Vec3) -> Vec3;
+    fn box_clone(&self) -> Box<dyn Material>;
+}
+
+impl Clone for Box<dyn Material> {
+    fn clone(&self) -> Self {
+        self.as_ref().box_clone()
+    }
 }
 
 #[derive(Clone)]
@@ -51,6 +59,10 @@ impl Material for Lambertian {
 
     fn emitted(&self, _u: f32, _v: f32, _p: &Vec3) -> Vec3 {
         Vec3::zeros()
+    }
+
+    fn box_clone(&self) -> Box<dyn Material> {
+        Box::new((*self).clone())
     }
 }
 
@@ -92,6 +104,10 @@ impl Material for Metal {
 
     fn emitted(&self, _u: f32, _v: f32, _p: &Vec3) -> Vec3 {
         Vec3::zeros()
+    }
+
+    fn box_clone(&self) -> Box<dyn Material> {
+        Box::new((*self).clone())
     }
 }
 
@@ -168,6 +184,10 @@ impl Material for Dielectric {
     fn emitted(&self, _u: f32, _v: f32, _p: &Vec3) -> Vec3 {
         Vec3::zeros()
     }
+
+    fn box_clone(&self) -> Box<dyn Material> {
+        Box::new((*self).clone())
+    }
 }
 
 fn refract(v: &Vec3, n: &Vec3, ni_over_nt: f32) -> Option<Vec3> {
@@ -208,5 +228,9 @@ impl Material for DiffuseLight {
 
     fn emitted(&self, u: f32, v: f32, p: &Vec3) -> Vec3 {
         self.emit.value(u, v, &p)
+    }
+
+    fn box_clone(&self) -> Box<dyn Material> {
+        Box::new((*self).clone())
     }
 }
