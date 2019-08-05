@@ -189,17 +189,19 @@ fn schlick(cosine: f32, refract_idx: f32) -> f32 {
 }
 
 #[derive(Clone)]
-pub struct Light {
+pub struct DiffuseLight {
     pub emit: Box<dyn Texture>,
 }
 
-impl Light {
-    pub fn new(emit: Box<dyn Texture>) -> Self {
-        Light { emit }
+impl DiffuseLight {
+    pub fn new(x: f32, y: f32, z: f32) -> Self {
+        DiffuseLight {
+            emit: Box::new(ConstantTexture::new(x, y, z)),
+        }
     }
 }
 
-impl Material for Light {
+impl Material for DiffuseLight {
     fn scatter(&self, _r_in: &Ray, _rec: &HitRecord) -> Option<ScatterRecord> {
         None
     }
