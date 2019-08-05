@@ -1,4 +1,5 @@
 pub mod aabb;
+pub mod block;
 pub mod color;
 pub mod rectangle;
 pub mod perlin;
