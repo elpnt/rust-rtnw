@@ -1,5 +1,6 @@
-use std::ops::{Add, Div, Index, Mul, Neg, Sub};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
+use std::ops::{Index, IndexMut};
 
 #[derive(Debug, Default, PartialEq, Copy, Clone)]
 pub struct Vec3 {
@@ -210,6 +211,17 @@ impl Index<usize> for Vec3 {
                 "Index out of range: index must be 0, 1 or 2. You called {}",
                 idx
             ),
+        }
+    }
+}
+
+impl IndexMut<usize> for Vec3 {
+    fn index_mut(&mut self, idx: usize) -> &mut f32 {
+        match idx {
+            0 => &mut self.x,
+            1 => &mut self.y,
+            2 => &mut self.z,
+            _ => panic!("Index out of range"),
         }
     }
 }
