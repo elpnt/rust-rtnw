@@ -17,6 +17,7 @@ mod rectangle;
 mod scene;
 mod sphere;
 mod texture;
+mod translate;
 mod vec3;
 
 use color::color;
@@ -39,7 +40,7 @@ fn main() {
     // Parallell process
     let start = Instant::now();
 
-    let mut f = BufWriter::new(fs::File::create("./output/cornell.ppm").unwrap());
+    let mut f = BufWriter::new(fs::File::create("./output/translate.ppm").unwrap());
     f.write_all(format!("P3\n{} {}\n255\n", nx, ny).as_bytes())
         .unwrap();
 

@@ -5,6 +5,7 @@ use crate::material::*;
 use crate::rectangle::*;
 use crate::sphere::{MovingSphere, Sphere};
 use crate::texture::*;
+use crate::translate::{Rotate, Translate};
 use crate::vec3::Vec3;
 
 use image;
@@ -389,16 +390,27 @@ pub fn blocks() -> HitableList {
             555.0,
             Box::new(white.clone()),
         )))),
-        Box::new(Block::new(
+        Box::new(Translate::new(
+            Box::new(Rotate::new(
+                Box::new(Block::new(
+                    Vec3::new(0.0, 0.0, 0.0),
+                    Vec3::new(165.0, 165.0, 165.0),
+                    Box::new(white.clone()),
+                )),
+                -18.0,
+            )),
             Vec3::new(130.0, 0.0, 65.0),
-            Vec3::new(295.0, 165.0, 230.0),
-            Box::new(white.clone()),
         )),
-
-        Box::new(Block::new(
+        Box::new(Translate::new(
+            Box::new(Rotate::new(
+                Box::new(Block::new(
+                    Vec3::new(0.0, 0.0, 0.0),
+                    Vec3::new(165.0, 330.0, 165.0),
+                    Box::new(white.clone()),
+                )),
+                15.0,
+            )),
             Vec3::new(265.0, 0.0, 295.0),
-            Vec3::new(430.0, 330.0, 460.0),
-            Box::new(white.clone()),
         )),
     ];
     HitableList { hitables }
