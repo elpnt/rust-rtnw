@@ -21,3 +21,7 @@ Ray Tracing -The Next Week- written in Rust
 ### Ch6: Cornell Box
 
 ![](./png/cornell.png)
+
+### Ch7: Instances
+
+![](./png/translate.png)
