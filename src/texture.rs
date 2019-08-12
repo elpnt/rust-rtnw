@@ -4,14 +4,8 @@ use std::clone::Clone;
 
 pub trait Texture: Send + Sync {
     fn value(&self, u: f32, v: f32, p: &Vec3) -> Vec3;
-    fn box_clone(&self) -> Box<dyn Texture>;
 }
 
-impl Clone for Box<dyn Texture> {
-    fn clone(&self) -> Self {
-        self.as_ref().box_clone()
-    }
-}
 
 #[derive(Clone)]
 pub struct ConstantTexture {
@@ -30,24 +24,21 @@ impl Texture for ConstantTexture {
     fn value(&self, _u: f32, _v: f32, _p: &Vec3) -> Vec3 {
         self.color
     }
-    fn box_clone(&self) -> Box<dyn Texture> {
-        Box::new((*self).clone())
-    }
 }
 
 #[derive(Clone)]
-pub struct CheckerTexture {
-    pub odd: Box<dyn Texture>,
-    pub even: Box<dyn Texture>,
+pub struct CheckerTexture<T: Texture, U: Texture> {
+    pub odd: T,
+    pub even: U,
 }
 
-impl CheckerTexture {
-    pub fn new(odd: Box<dyn Texture>, even: Box<dyn Texture>) -> Self {
+impl<T: Texture, U: Texture> CheckerTexture<T, U> {
+    pub fn new(odd: T, even: U) -> Self {
         CheckerTexture { odd, even }
     }
 }
 
-impl Texture for CheckerTexture {
+impl<T: Texture, U: Texture> Texture for CheckerTexture<T, U> {
     fn value(&self, u: f32, v: f32, p: &Vec3) -> Vec3 {
         let sines: f32 = (10.0 * p.x).sin() * (10.0 * p.y).sin() * (10.0 * p.z).sin();
         if sines < 0.0 {
@@ -55,9 +46,6 @@ impl Texture for CheckerTexture {
         } else {
             self.even.value(u, v, &p)
         }
-    }
-    fn box_clone(&self) -> Box<dyn Texture> {
-        Box::new((*self).clone())
     }
 }
 
@@ -84,9 +72,6 @@ impl Texture for NoiseTexture {
         Vec3::make_unit_vector()
             * 0.5
             * (1.0 + (self.scale * p.z + 10.0 * self.noise.turbulence(&p, 7)).sin())
-    }
-    fn box_clone(&self) -> Box<dyn Texture> {
-        Box::new((*self).clone())
     }
 }
 
@@ -122,9 +107,6 @@ impl Texture for ImageTexture {
         Vec3::new(r, g, b)
     }
 
-    fn box_clone(&self) -> Box<dyn Texture> {
-        Box::new((*self).clone())
-    }
 }
 
 fn clamp(x: f32, max: f32) -> f32 {

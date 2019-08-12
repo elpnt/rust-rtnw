@@ -3,7 +3,7 @@ use crate::hitable::{HitRecord, Hitable};
 use crate::ray::Ray;
 
 pub struct HitableList {
-    pub hitables: Vec<Box<Hitable>>,
+    pub hitables: Vec<Box<dyn Hitable>>,
 }
 
 impl HitableList {

@@ -7,14 +7,14 @@ use crate::vec3::Vec3;
 use std::borrow::Borrow;
 use std::f32::consts::PI;
 
-pub struct Sphere {
+pub struct Sphere<M: Material> {
     pub center: Vec3,
     pub radius: f32,
-    pub material: Box<dyn Material>,
+    pub material: M,
 }
 
-impl Sphere {
-    pub fn new(center: Vec3, radius: f32, material: Box<dyn Material>) -> Self {
+impl<M: Material> Sphere<M> {
+    pub fn new(center: Vec3, radius: f32, material: M) -> Self {
         Sphere {
             center,
             radius,
@@ -23,7 +23,7 @@ impl Sphere {
     }
 }
 
-impl Hitable for Sphere {
+impl<M: Material> Hitable for Sphere<M> {
     fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         let oc: Vec3 = r.origin - self.center;
         let a: f32 = r.direction.dot(&r.direction);
@@ -50,7 +50,7 @@ impl Hitable for Sphere {
                     v,
                     p,
                     normal,
-                    material: self.material.borrow(),
+                    material: &self.material,
                 })
             } else {
                 None
@@ -70,23 +70,23 @@ impl Hitable for Sphere {
     }
 }
 
-pub struct MovingSphere {
+pub struct MovingSphere<M: Material> {
     pub center0: Vec3,
     pub center1: Vec3,
     pub time0: f32,
     pub time1: f32,
     pub radius: f32,
-    pub material: Box<dyn Material>,
+    pub material: M
 }
 
-impl MovingSphere {
+impl<M: Material> MovingSphere<M> {
     pub fn new(
         center0: Vec3,
         center1: Vec3,
         time0: f32,
         time1: f32,
         radius: f32,
-        material: Box<dyn Material>,
+        material: M,
     ) -> Self {
         MovingSphere {
             center0,
@@ -104,7 +104,7 @@ impl MovingSphere {
     }
 }
 
-impl Hitable for MovingSphere {
+impl<M: Material> Hitable for MovingSphere<M> {
     fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         let oc: Vec3 = r.origin - self.center_at_time(r.time);
         let a: f32 = r.direction.dot(&r.direction);

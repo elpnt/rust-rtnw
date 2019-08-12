@@ -8,10 +8,10 @@ mod aabb;
 mod block;
 mod camera;
 mod color;
+mod flip;
 mod hitable;
 mod hitable_list;
 mod material;
-mod medium;
 mod perlin;
 mod ray;
 mod rectangle;
@@ -28,18 +28,18 @@ use vec3::Vec3;
 fn main() {
     let nx: u32 = 400;
     let ny: u32 = 400;
-    let ns: u32 = 100;
+    let ns: u32 = 10;
 
     // Objects setup
-    let world = scene::blocks();
+    let world = scene::simple_light();
 
     // Camera setup
-    let cam = camera::camera_for_cornell_box(nx, ny);
+    let cam = camera::camera_for_two_spheres(nx, ny);
 
     // Parallell process
     let start = Instant::now();
 
-    let mut f = BufWriter::new(fs::File::create("./output/translate.ppm").unwrap());
+    let mut f = BufWriter::new(fs::File::create("./output/impltrait.ppm").unwrap());
     f.write_all(format!("P3\n{} {}\n255\n", nx, ny).as_bytes())
         .unwrap();
 
@@ -82,7 +82,7 @@ fn main() {
     }
 
     let duration = start.elapsed();
-    println!("Time elapsed in parallel process is: {:?}", duration);
+    println!("Elapsed time: {:?}", duration);
 
     /* Single thread process
     for j in (0..ny).rev() {
