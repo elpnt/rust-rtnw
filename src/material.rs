@@ -234,3 +234,32 @@ impl Material for DiffuseLight {
         Box::new((*self).clone())
     }
 }
+
+#[derive(Clone)]
+pub struct Isotropic {
+    pub albedo: Box<dyn Texture>
+}
+
+impl Isotropic {
+    pub fn new(albedo: Box<dyn Texture>) -> Self {
+        Isotropic { albedo }
+    }
+}
+
+impl Material for Isotropic {
+    fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<ScatterRecord> {
+        let scattered = Ray::new(rec.p, random_in_unit_sphere(), 0.0);
+        let attenuation = self.albedo.value(rec.u, rec.v, &rec.p);
+        Some(ScatterRecord{
+            scattered, attenuation
+        })
+    }
+
+    fn emitted(&self, u: f32, v: f32, p: &Vec3) -> Vec3 {
+        Vec3::zeros()
+    }
+
+    fn box_clone(&self) -> Box<dyn Material> {
+        Box::new((*self).clone())
+    }
+}

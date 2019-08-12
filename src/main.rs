@@ -11,6 +11,7 @@ mod color;
 mod hitable;
 mod hitable_list;
 mod material;
+mod medium;
 mod perlin;
 mod ray;
 mod rectangle;
@@ -21,8 +22,6 @@ mod translate;
 mod vec3;
 
 use color::color;
-use hitable::Hitable;
-use hitable_list::HitableList;
 use ray::Ray;
 use vec3::Vec3;
 

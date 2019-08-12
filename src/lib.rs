@@ -1,4 +1,5 @@
 pub mod aabb;
+pub mod medium;
 pub mod translate;
 pub mod block;
 pub mod color;
