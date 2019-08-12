@@ -285,10 +285,10 @@ pub fn cornell_box() -> HitableList {
         Box::new(Rectangle::new(Plane::YZ, 0.0, 555.0, 0.0, 555.0, 0.0, red)),
         Box::new(Rectangle::new(
             Plane::ZX,
-            127.0,
-            432.0,
-            113.0,
-            443.0,
+            227.0,
+            332.0,
+            213.0,
+            343.0,
             554.0,
             light,
         )),
@@ -327,7 +327,7 @@ pub fn blocks() -> HitableList {
     let red = Lambertian::new(ConstantTexture::new(0.65, 0.05, 0.05));
     let white = Lambertian::new(ConstantTexture::new(0.73, 0.73, 0.73));
     let green = Lambertian::new(ConstantTexture::new(0.12, 0.45, 0.15));
-    let light = DiffuseLight::new(ConstantTexture::new(7.0, 7.0, 7.0));
+    let light = DiffuseLight::new(ConstantTexture::new(15.0, 15.0, 15.0));
 
     let box1 = Translate::new(
         Rotate::new(

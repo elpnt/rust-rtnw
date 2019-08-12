@@ -39,7 +39,7 @@ impl<H: Hitable, T: Texture> Hitable for ConstantMedium<H, T> {
                     };
                     let mut rng = thread_rng();
                     let distance_inside_boundary: f32 = (rec2.t - rec1.t) * r.direction.length();
-                    let hit_distance: f32 = -(1.0 / self.density) / (rng.gen::<f32>()).ln();
+                    let hit_distance: f32 = -(1.0 / self.density) * (rng.gen::<f32>()).ln();
                     if hit_distance < distance_inside_boundary {
                         let t = rec1.t + hit_distance / r.direction.length();
                         return Some(HitRecord {

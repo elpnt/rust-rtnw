@@ -18,11 +18,6 @@ pub fn color(r: &Ray, world: &HitableList, depth: u32) -> Vec3 {
             emitted
         }
     } else {
-        /*
-        let unit_direction: Vec3 = r.direction.unit_vector();
-        let t: f32 = 0.5 * (unit_direction.y + 1.0);
-        (1.0 - t) * Vec3::new(1.0, 1.0, 1.0) + t * Vec3::new(0.5, 0.7, 1.0)
-        */
         Vec3::zeros()
     }
 }

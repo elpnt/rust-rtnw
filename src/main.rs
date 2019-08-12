@@ -27,12 +27,12 @@ use ray::Ray;
 use vec3::Vec3;
 
 fn main() {
-    let nx: u32 = 400;
-    let ny: u32 = 400;
-    let ns: u32 = 50;
+    let nx: u32 = 800;
+    let ny: u32 = 800;
+    let ns: u32 = 100;
 
     // Objects setup
-    let world = scene::cornell_box();
+    let world = scene::blocks();
 
     // Camera setup
     let cam = camera::camera_for_cornell_box(nx, ny);
