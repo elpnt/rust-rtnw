@@ -1,8 +1,9 @@
 use crate::block::*;
-use crate::hitable::Hitable;
 use crate::flip::FlipNormals;
+use crate::hitable::Hitable;
 use crate::hitable_list::HitableList;
 use crate::material::*;
+use crate::medium::ConstantMedium;
 use crate::rectangle::*;
 use crate::sphere::{MovingSphere, Sphere};
 use crate::texture::*;
@@ -20,7 +21,7 @@ pub fn random_scene() -> HitableList {
     hitables.push(Box::new(Sphere {
         center: Vec3::new(0.0, -1000.0, 0.0),
         radius: 1000.0,
-        material: Lambertian::new(ConstantTexture::new(0.5, 1.0, 0.5))
+        material: Lambertian::new(ConstantTexture::new(0.5, 1.0, 0.5)),
     }));
 
     // a lot of small spheres
@@ -75,17 +76,17 @@ pub fn random_scene() -> HitableList {
     hitables.push(Box::new(Sphere {
         center: Vec3::new(0.0, 1.0, 0.0),
         radius: 1.0,
-        material: Dielectric::new(1.5)
+        material: Dielectric::new(1.5),
     }));
     hitables.push(Box::new(Sphere {
         center: Vec3::new(4.0, 1.0, 0.0),
         radius: 1.0,
-        material: Lambertian::new(ConstantTexture::new(0.4, 0.2, 0.1))
+        material: Lambertian::new(ConstantTexture::new(0.4, 0.2, 0.1)),
     }));
     hitables.push(Box::new(Sphere {
         center: Vec3::new(4.0, 1.0, 0.0),
         radius: 1.0,
-        material: Metal::new((0.7, 0.6, 0.5), 0.0)
+        material: Metal::new((0.7, 0.6, 0.5), 0.0),
     }));
 
     HitableList { hitables }
@@ -103,7 +104,7 @@ pub fn random_scene_with_motion() -> HitableList {
     hitables.push(Box::new(Sphere {
         center: Vec3::new(0.0, -1000.0, 0.0),
         radius: 1000.0,
-        material: Lambertian::new(checker)
+        material: Lambertian::new(checker),
     }));
 
     // a lot of small spheres
@@ -150,7 +151,7 @@ pub fn random_scene_with_motion() -> HitableList {
                     hitables.push(Box::new(Sphere {
                         center,
                         radius: 0.2,
-                        material: Dielectric::new(1.5)
+                        material: Dielectric::new(1.5),
                     }));
                 }
             }
@@ -161,17 +162,17 @@ pub fn random_scene_with_motion() -> HitableList {
     hitables.push(Box::new(Sphere {
         center: Vec3::new(0.0, 1.0, 0.0),
         radius: 1.0,
-        material: Dielectric::new(1.5)
+        material: Dielectric::new(1.5),
     }));
     hitables.push(Box::new(Sphere {
         center: Vec3::new(4.0, 1.0, 0.0),
         radius: 1.0,
-        material: Lambertian::new(ConstantTexture::new(0.2, 0.6, 0.8))
+        material: Lambertian::new(ConstantTexture::new(0.2, 0.6, 0.8)),
     }));
     hitables.push(Box::new(Sphere {
         center: Vec3::new(4.0, 1.0, 0.0),
         radius: 1.0,
-        material: Metal::new((0.9, 0.8, 0.8), 0.0)
+        material: Metal::new((0.9, 0.8, 0.8), 0.0),
     }));
 
     HitableList { hitables }
@@ -191,7 +192,7 @@ pub fn two_spheres() -> HitableList {
         Box::new(Sphere {
             center: Vec3::new(0.0, 10.0, 0.0),
             radius: 10.0,
-            material: Lambertian::new(checker.clone())
+            material: Lambertian::new(checker.clone()),
         }),
     ];
 
@@ -204,12 +205,12 @@ pub fn two_perlin_spheres() -> HitableList {
         Box::new(Sphere {
             center: Vec3::new(0.0, -1000.0, 0.0),
             radius: 1000.0,
-            material: Lambertian::new(pertext.clone())
+            material: Lambertian::new(pertext.clone()),
         }),
         Box::new(Sphere {
             center: Vec3::new(0.0, 2.0, 0.0),
             radius: 2.0,
-            material: Lambertian::new(pertext.clone())
+            material: Lambertian::new(pertext.clone()),
         }),
     ];
 
@@ -226,12 +227,12 @@ pub fn earth() -> HitableList {
         Box::new(Sphere {
             center: Vec3::new(0.0, -1000.0, 0.0),
             radius: 1000.0,
-            material: Lambertian::new(pertext)
+            material: Lambertian::new(pertext),
         }),
         Box::new(Sphere {
             center: Vec3::new(0.0, 2.0, 0.0),
             radius: 2.0,
-            material: Lambertian::new(image_texture)
+            material: Lambertian::new(image_texture),
         }),
     ];
 
@@ -244,12 +245,12 @@ pub fn simple_light() -> HitableList {
         Box::new(Sphere::new(
             Vec3::new(0.0, -1000.0, 0.0),
             1000.0,
-            Lambertian::new(pertext.clone())
+            Lambertian::new(pertext.clone()),
         )),
         Box::new(Sphere::new(
             Vec3::new(0.0, 2.0, 0.0),
             2.0,
-            Lambertian::new(pertext.clone())
+            Lambertian::new(pertext.clone()),
         )),
         Box::new(Rectangle::new(
             Plane::XY,
@@ -258,7 +259,7 @@ pub fn simple_light() -> HitableList {
             1.0,
             3.0,
             -2.0,
-            DiffuseLight::new(ConstantTexture::new(4.0, 4.0, 4.0))
+            DiffuseLight::new(ConstantTexture::new(4.0, 4.0, 4.0)),
         )),
     ];
 
@@ -279,17 +280,9 @@ pub fn cornell_box() -> HitableList {
             0.0,
             555.0,
             555.0,
-            green
+            green,
         ))),
-        Box::new(Rectangle::new(
-            Plane::YZ,
-            0.0,
-            555.0,
-            0.0,
-            555.0,
-            0.0,
-            red
-        )),
+        Box::new(Rectangle::new(Plane::YZ, 0.0, 555.0, 0.0, 555.0, 0.0, red)),
         Box::new(Rectangle::new(
             Plane::ZX,
             227.0,
@@ -306,7 +299,7 @@ pub fn cornell_box() -> HitableList {
             0.0,
             555.0,
             555.0,
-            white.clone()
+            white.clone(),
         ))),
         Box::new(Rectangle::new(
             Plane::ZX,
@@ -315,7 +308,7 @@ pub fn cornell_box() -> HitableList {
             0.0,
             555.0,
             0.0,
-            white.clone()
+            white.clone(),
         )),
         Box::new(FlipNormals::new(Rectangle::new(
             Plane::XY,
@@ -324,7 +317,7 @@ pub fn cornell_box() -> HitableList {
             0.0,
             555.0,
             555.0,
-            white.clone()
+            white.clone(),
         ))),
     ];
     HitableList { hitables }
@@ -336,6 +329,28 @@ pub fn blocks() -> HitableList {
     let green = Lambertian::new(ConstantTexture::new(0.12, 0.45, 0.15));
     let light = DiffuseLight::new(ConstantTexture::new(15.0, 15.0, 15.0));
 
+    let box1 = Translate::new(
+        Rotate::new(
+            Block::new(
+                Vec3::new(0.0, 0.0, 0.0),
+                Vec3::new(165.0, 165.0, 165.0),
+                white.clone(),
+            ),
+            -18.0,
+        ),
+        Vec3::new(130.0, 0.0, 65.0),
+    );
+    let box2 = Translate::new(
+        Rotate::new(
+            Block::new(
+                Vec3::new(0.0, 0.0, 0.0),
+                Vec3::new(165.0, 330.0, 165.0),
+                white.clone(),
+            ),
+            15.0,
+        ),
+        Vec3::new(265.0, 0.0, 295.0),
+    );
     let hitables: Vec<Box<dyn Hitable>> = vec![
         Box::new(FlipNormals::new(Rectangle::new(
             Plane::YZ,
@@ -346,21 +361,13 @@ pub fn blocks() -> HitableList {
             555.0,
             green,
         ))),
-        Box::new(Rectangle::new(
-            Plane::YZ,
-            0.0,
-            555.0,
-            0.0,
-            555.0,
-            0.0,
-            red,
-        )),
+        Box::new(Rectangle::new(Plane::YZ, 0.0, 555.0, 0.0, 555.0, 0.0, red)),
         Box::new(Rectangle::new(
             Plane::ZX,
-            227.0,
-            332.0,
-            213.0,
-            343.0,
+            127.0,
+            432.0,
+            113.0,
+            443.0,
             554.0,
             light,
         )),
@@ -391,27 +398,15 @@ pub fn blocks() -> HitableList {
             555.0,
             white.clone(),
         ))),
-        Box::new(Translate::new(
-            Rotate::new(
-                Block::new(
-                    Vec3::new(0.0, 0.0, 0.0),
-                    Vec3::new(165.0, 165.0, 165.0),
-                    white.clone(),
-                ),
-                -18.0,
-            ),
-            Vec3::new(130.0, 0.0, 65.0),
+        Box::new(ConstantMedium::new(
+            box1,
+            0.01,
+            ConstantTexture::new(1.0, 1.0, 1.0),
         )),
-        Box::new(Translate::new(
-            Rotate::new(
-                Block::new(
-                    Vec3::new(0.0, 0.0, 0.0),
-                    Vec3::new(165.0, 330.0, 165.0),
-                    white.clone(),
-                ),
-                15.0,
-            ),
-            Vec3::new(265.0, 0.0, 295.0),
+        Box::new(ConstantMedium::new(
+            box2,
+            0.01,
+            ConstantTexture::new(0.0, 0.0, 0.0),
         )),
     ];
     HitableList { hitables }
