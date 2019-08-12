@@ -13,8 +13,8 @@ pub struct Block {
 }
 
 impl Block {
-    pub fn new(pmin: Vec3, pmax: Vec3, material: Box<dyn Material>) -> Self {
-        let hitables: Vec<Box<Hitable>> = vec![
+    pub fn new<M: Material + Clone + 'static>(pmin: Vec3, pmax: Vec3, material: M) -> Self {
+        let hitables: Vec<Box<dyn Hitable>> = vec![
             Box::new(Rectangle::new(
                 Plane::XY,
                 pmin.x,

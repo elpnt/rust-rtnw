@@ -4,7 +4,6 @@ use crate::texture::*;
 use crate::vec3::Vec3;
 
 use rand;
-use std::clone::Clone;
 
 pub struct ScatterRecord {
     pub attenuation: Vec3,
@@ -14,33 +13,33 @@ pub struct ScatterRecord {
 pub trait Material: Send + Sync {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<ScatterRecord>;
     fn emitted(&self, u: f32, v: f32, p: &Vec3) -> Vec3;
-    fn box_clone(&self) -> Box<dyn Material>;
+    // fn box_clone(&self) -> Box<dyn Material>;
 }
 
-impl Clone for Box<dyn Material> {
-    fn clone(&self) -> Self {
-        self.as_ref().box_clone()
-    }
-}
 
 #[derive(Clone)]
-pub struct Lambertian {
-    pub albedo: Box<dyn Texture>,
+pub struct Lambertian<T: Texture> {
+    pub albedo: T,
 }
 
-impl Lambertian {
+impl<T: Texture> Lambertian<T> {
+    /*
     pub fn new(x: f32, y: f32, z: f32) -> Self {
         Lambertian {
-            albedo: Box::new(ConstantTexture::new(x, y, z)),
+            albedo: ConstantTexture::new(x, y, z),
         }
     }
+    */
+    pub fn new(albedo: T) -> Self {
+        Lambertian { albedo }
+    }
 
-    pub fn new_with_texture(albedo: Box<dyn Texture>) -> Self {
+    pub fn new_with_texture(albedo: T) -> Self {
         Lambertian { albedo: albedo }
     }
 }
 
-impl Material for Lambertian {
+impl<T: Texture> Material for Lambertian<T> {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<ScatterRecord> {
         let target: Vec3 = rec.p + rec.normal + random_in_unit_sphere();
         let scattered = Ray {
@@ -48,7 +47,6 @@ impl Material for Lambertian {
             direction: target - rec.p,
             time: r_in.time,
         };
-        // let attenuation: Vec3 = self.albedo.value(0.0, 0.0, &rec.p);
         let attenuation: Vec3 = self.albedo.value(rec.u, rec.v, &rec.p);
 
         Some(ScatterRecord {
@@ -61,9 +59,6 @@ impl Material for Lambertian {
         Vec3::zeros()
     }
 
-    fn box_clone(&self) -> Box<dyn Material> {
-        Box::new((*self).clone())
-    }
 }
 
 #[derive(Clone)]
@@ -106,9 +101,6 @@ impl Material for Metal {
         Vec3::zeros()
     }
 
-    fn box_clone(&self) -> Box<dyn Material> {
-        Box::new((*self).clone())
-    }
 }
 
 fn random_in_unit_sphere() -> Vec3 {
@@ -185,9 +177,6 @@ impl Material for Dielectric {
         Vec3::zeros()
     }
 
-    fn box_clone(&self) -> Box<dyn Material> {
-        Box::new((*self).clone())
-    }
 }
 
 fn refract(v: &Vec3, n: &Vec3, ni_over_nt: f32) -> Option<Vec3> {
@@ -209,19 +198,24 @@ fn schlick(cosine: f32, refract_idx: f32) -> f32 {
 }
 
 #[derive(Clone)]
-pub struct DiffuseLight {
-    pub emit: Box<dyn Texture>,
+pub struct DiffuseLight<T: Texture> {
+    pub emit: T,
 }
 
-impl DiffuseLight {
+impl<T: Texture> DiffuseLight<T> {
+    /*
     pub fn new(x: f32, y: f32, z: f32) -> Self {
         DiffuseLight {
             emit: Box::new(ConstantTexture::new(x, y, z)),
         }
     }
+    */
+    pub fn new(emit: T) -> Self {
+        DiffuseLight { emit }
+    }
 }
 
-impl Material for DiffuseLight {
+impl<T: Texture> Material for DiffuseLight<T> {
     fn scatter(&self, _r_in: &Ray, _rec: &HitRecord) -> Option<ScatterRecord> {
         None
     }
@@ -230,23 +224,20 @@ impl Material for DiffuseLight {
         self.emit.value(u, v, &p)
     }
 
-    fn box_clone(&self) -> Box<dyn Material> {
-        Box::new((*self).clone())
-    }
 }
 
 #[derive(Clone)]
-pub struct Isotropic {
-    pub albedo: Box<dyn Texture>
+pub struct Isotropic<T: Texture> {
+    pub albedo: T
 }
 
-impl Isotropic {
-    pub fn new(albedo: Box<dyn Texture>) -> Self {
+impl<T: Texture> Isotropic<T> {
+    pub fn new(albedo: T) -> Self {
         Isotropic { albedo }
     }
 }
 
-impl Material for Isotropic {
+impl<T: Texture> Material for Isotropic<T> {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<ScatterRecord> {
         let scattered = Ray::new(rec.p, random_in_unit_sphere(), 0.0);
         let attenuation = self.albedo.value(rec.u, rec.v, &rec.p);
@@ -259,7 +250,4 @@ impl Material for Isotropic {
         Vec3::zeros()
     }
 
-    fn box_clone(&self) -> Box<dyn Material> {
-        Box::new((*self).clone())
-    }
 }

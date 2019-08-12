@@ -5,18 +5,18 @@ use crate::vec3::Vec3;
 
 use std::f32::consts::PI;
 
-pub struct Translate {
-    pub hitable: Box<dyn Hitable>,
+pub struct Translate<H: Hitable> {
+    pub hitable: H,
     pub offset: Vec3,
 }
 
-impl Translate {
-    pub fn new(hitable: Box<dyn Hitable>, offset: Vec3) -> Self {
+impl<H: Hitable> Translate<H> {
+    pub fn new(hitable: H, offset: Vec3) -> Self {
         Translate { hitable, offset }
     }
 }
 
-impl Hitable for Translate {
+impl<H: Hitable> Hitable for Translate<H> {
     fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         let moved_r = Ray::new(r.origin - self.offset, r.direction, r.time);
         if let Some(mut rec) = self.hitable.hit(&moved_r, t_min, t_max) {
@@ -38,15 +38,15 @@ impl Hitable for Translate {
     }
 }
 
-pub struct Rotate {
-    pub hitable: Box<dyn Hitable>,
+pub struct Rotate<H: Hitable> {
+    pub hitable: H,
     pub sin_theta: f32,
     pub cos_theta: f32,
     pub bbox: Option<AABB>,
 }
 
-impl Rotate {
-    pub fn new(hitable: Box<dyn Hitable>, angle: f32) -> Self {
+impl<H: Hitable> Rotate<H> {
+    pub fn new(hitable: H, angle: f32) -> Self {
         let radians: f32 = (PI / 180.0) * angle;
         let sin_theta: f32 = radians.sin();
         let cos_theta: f32 = radians.cos();
@@ -86,7 +86,7 @@ impl Rotate {
     }
 }
 
-impl Hitable for Rotate {
+impl<H: Hitable> Hitable for Rotate<H> {
     fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         let mut origin: Vec3 = r.origin;
         let mut direction: Vec3 = r.direction;

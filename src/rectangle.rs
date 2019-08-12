@@ -11,17 +11,17 @@ pub enum Plane {
     ZX,
 }
 
-pub struct Rectangle {
+pub struct Rectangle<M: Material> {
     pub plane: Plane,
     pub a0: f32,
     pub a1: f32,
     pub b0: f32,
     pub b1: f32,
     pub k: f32,
-    pub material: Box<dyn Material>,
+    pub material: M,
 }
 
-impl Rectangle {
+impl<M: Material> Rectangle<M> {
     pub fn new(
         plane: Plane,
         a0: f32,
@@ -29,7 +29,7 @@ impl Rectangle {
         b0: f32,
         b1: f32,
         k: f32,
-        material: Box<dyn Material>,
+        material: M
     ) -> Self {
         Rectangle {
             plane,
@@ -43,7 +43,7 @@ impl Rectangle {
     }
 }
 
-impl Hitable for Rectangle {
+impl<M: Material> Hitable for Rectangle<M> {
     fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         let (a_axis, b_axis, k_axis) = match &self.plane {
             Plane::XY => (0, 1, 2),
@@ -74,7 +74,7 @@ impl Hitable for Rectangle {
                     v,
                     p,
                     normal,
-                    material: self.material.borrow(),
+                    material: &self.material
                 })
             }
         }
