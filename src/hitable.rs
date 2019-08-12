@@ -19,27 +19,3 @@ pub trait Hitable: Send + Sync {
     fn bounding_box(&self, t0: f32, t1: f32) -> Option<AABB>;
 }
 
-pub struct FlipNormals {
-    pub hitable: Box<dyn Hitable>,
-}
-
-impl FlipNormals {
-    pub fn new(hitable: Box<dyn Hitable>) -> Self {
-        FlipNormals { hitable }
-    }
-}
-
-impl Hitable for FlipNormals {
-    fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
-        if let Some(mut rec) = self.hitable.hit(&r, t_min, t_max) {
-            rec.normal = -rec.normal;
-            Some(rec)
-        } else {
-            None
-        }
-    }
-
-    fn bounding_box(&self, t0: f32, t1: f32) -> Option<AABB> {
-        self.hitable.bounding_box(t0, t1)
-    }
-}
