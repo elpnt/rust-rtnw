@@ -1,4 +1,5 @@
 use crate::aabb::AABB;
+use crate::flip::FlipNormals;
 use crate::hitable::*;
 use crate::hitable_list::HitableList;
 use crate::material::*;
@@ -24,7 +25,7 @@ impl Block {
                 pmax.z,
                 material.clone(),
             )),
-            Box::new(FlipNormals::new(Box::new(Rectangle::new(
+            Box::new(FlipNormals::new(Rectangle::new(
                 Plane::XY,
                 pmin.x,
                 pmax.x,
@@ -32,7 +33,7 @@ impl Block {
                 pmax.y,
                 pmin.z,
                 material.clone(),
-            )))),
+            ))),
             Box::new(Rectangle::new(
                 Plane::ZX,
                 pmin.z,
@@ -42,7 +43,7 @@ impl Block {
                 pmax.y,
                 material.clone(),
             )),
-            Box::new(FlipNormals::new(Box::new(Rectangle::new(
+            Box::new(FlipNormals::new(Rectangle::new(
                 Plane::ZX,
                 pmin.z,
                 pmax.z,
@@ -50,7 +51,7 @@ impl Block {
                 pmax.x,
                 pmin.y,
                 material.clone(),
-            )))),
+            ))),
             Box::new(Rectangle::new(
                 Plane::YZ,
                 pmin.y,
@@ -60,7 +61,7 @@ impl Block {
                 pmax.x,
                 material.clone(),
             )),
-            Box::new(FlipNormals::new(Box::new(Rectangle::new(
+            Box::new(FlipNormals::new(Rectangle::new(
                 Plane::YZ,
                 pmin.y,
                 pmax.y,
@@ -68,7 +69,7 @@ impl Block {
                 pmax.z,
                 pmin.x,
                 material.clone(),
-            )))),
+            ))),
         ];
 
         Block {

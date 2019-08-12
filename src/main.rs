@@ -12,6 +12,7 @@ mod flip;
 mod hitable;
 mod hitable_list;
 mod material;
+mod medium;
 mod perlin;
 mod ray;
 mod rectangle;
@@ -28,18 +29,18 @@ use vec3::Vec3;
 fn main() {
     let nx: u32 = 400;
     let ny: u32 = 400;
-    let ns: u32 = 10;
+    let ns: u32 = 50;
 
     // Objects setup
-    let world = scene::simple_light();
+    let world = scene::cornell_box();
 
     // Camera setup
-    let cam = camera::camera_for_two_spheres(nx, ny);
+    let cam = camera::camera_for_cornell_box(nx, ny);
 
     // Parallell process
     let start = Instant::now();
 
-    let mut f = BufWriter::new(fs::File::create("./output/impltrait.ppm").unwrap());
+    let mut f = BufWriter::new(fs::File::create("./output/volumes.ppm").unwrap());
     f.write_all(format!("P3\n{} {}\n255\n", nx, ny).as_bytes())
         .unwrap();
 

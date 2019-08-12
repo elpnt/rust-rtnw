@@ -3,7 +3,6 @@ use crate::hitable::*;
 use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
-use std::borrow::Borrow;
 
 pub enum Plane {
     XY,
@@ -22,15 +21,7 @@ pub struct Rectangle<M: Material> {
 }
 
 impl<M: Material> Rectangle<M> {
-    pub fn new(
-        plane: Plane,
-        a0: f32,
-        a1: f32,
-        b0: f32,
-        b1: f32,
-        k: f32,
-        material: M
-    ) -> Self {
+    pub fn new(plane: Plane, a0: f32, a1: f32, b0: f32, b1: f32, k: f32, material: M) -> Self {
         Rectangle {
             plane,
             a0,
@@ -74,7 +65,7 @@ impl<M: Material> Hitable for Rectangle<M> {
                     v,
                     p,
                     normal,
-                    material: &self.material
+                    material: &self.material,
                 })
             }
         }

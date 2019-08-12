@@ -76,7 +76,7 @@ pub struct MovingSphere<M: Material> {
     pub time0: f32,
     pub time1: f32,
     pub radius: f32,
-    pub material: M
+    pub material: M,
 }
 
 impl<M: Material> MovingSphere<M> {

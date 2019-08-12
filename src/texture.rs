@@ -1,11 +1,9 @@
 use crate::perlin::*;
 use crate::vec3::Vec3;
-use std::clone::Clone;
 
 pub trait Texture: Send + Sync {
     fn value(&self, u: f32, v: f32, p: &Vec3) -> Vec3;
 }
-
 
 #[derive(Clone)]
 pub struct ConstantTexture {
@@ -106,7 +104,6 @@ impl Texture for ImageTexture {
         let b = self.data[idx + 2] as f32 / 255.0;
         Vec3::new(r, g, b)
     }
-
 }
 
 fn clamp(x: f32, max: f32) -> f32 {

@@ -15,7 +15,7 @@ impl<H: Hitable> FlipNormals<H> {
 impl<H: Hitable> Hitable for FlipNormals<H> {
     fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         if let Some(mut rec) = self.hitable.hit(&r, t_min, t_max) {
-            rec.normal = -rec.normal;
+            //rec.normal = -rec.normal;
             Some(rec)
         } else {
             None

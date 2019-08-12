@@ -13,9 +13,7 @@ pub struct ScatterRecord {
 pub trait Material: Send + Sync {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<ScatterRecord>;
     fn emitted(&self, u: f32, v: f32, p: &Vec3) -> Vec3;
-    // fn box_clone(&self) -> Box<dyn Material>;
 }
-
 
 #[derive(Clone)]
 pub struct Lambertian<T: Texture> {
@@ -23,19 +21,8 @@ pub struct Lambertian<T: Texture> {
 }
 
 impl<T: Texture> Lambertian<T> {
-    /*
-    pub fn new(x: f32, y: f32, z: f32) -> Self {
-        Lambertian {
-            albedo: ConstantTexture::new(x, y, z),
-        }
-    }
-    */
     pub fn new(albedo: T) -> Self {
         Lambertian { albedo }
-    }
-
-    pub fn new_with_texture(albedo: T) -> Self {
-        Lambertian { albedo: albedo }
     }
 }
 
@@ -58,7 +45,6 @@ impl<T: Texture> Material for Lambertian<T> {
     fn emitted(&self, _u: f32, _v: f32, _p: &Vec3) -> Vec3 {
         Vec3::zeros()
     }
-
 }
 
 #[derive(Clone)]
@@ -100,7 +86,6 @@ impl Material for Metal {
     fn emitted(&self, _u: f32, _v: f32, _p: &Vec3) -> Vec3 {
         Vec3::zeros()
     }
-
 }
 
 fn random_in_unit_sphere() -> Vec3 {
@@ -176,7 +161,6 @@ impl Material for Dielectric {
     fn emitted(&self, _u: f32, _v: f32, _p: &Vec3) -> Vec3 {
         Vec3::zeros()
     }
-
 }
 
 fn refract(v: &Vec3, n: &Vec3, ni_over_nt: f32) -> Option<Vec3> {
@@ -203,13 +187,6 @@ pub struct DiffuseLight<T: Texture> {
 }
 
 impl<T: Texture> DiffuseLight<T> {
-    /*
-    pub fn new(x: f32, y: f32, z: f32) -> Self {
-        DiffuseLight {
-            emit: Box::new(ConstantTexture::new(x, y, z)),
-        }
-    }
-    */
     pub fn new(emit: T) -> Self {
         DiffuseLight { emit }
     }
@@ -223,12 +200,11 @@ impl<T: Texture> Material for DiffuseLight<T> {
     fn emitted(&self, u: f32, v: f32, p: &Vec3) -> Vec3 {
         self.emit.value(u, v, &p)
     }
-
 }
 
 #[derive(Clone)]
 pub struct Isotropic<T: Texture> {
-    pub albedo: T
+    pub albedo: T,
 }
 
 impl<T: Texture> Isotropic<T> {
@@ -239,15 +215,15 @@ impl<T: Texture> Isotropic<T> {
 
 impl<T: Texture> Material for Isotropic<T> {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<ScatterRecord> {
-        let scattered = Ray::new(rec.p, random_in_unit_sphere(), 0.0);
+        let scattered = Ray::new(rec.p, random_in_unit_sphere(), r_in.time);
         let attenuation = self.albedo.value(rec.u, rec.v, &rec.p);
-        Some(ScatterRecord{
-            scattered, attenuation
+        Some(ScatterRecord {
+            scattered,
+            attenuation,
         })
     }
 
-    fn emitted(&self, u: f32, v: f32, p: &Vec3) -> Vec3 {
+    fn emitted(&self, _u: f32, _v: f32, _p: &Vec3) -> Vec3 {
         Vec3::zeros()
     }
-
 }
