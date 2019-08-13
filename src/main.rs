@@ -27,12 +27,12 @@ use ray::Ray;
 use vec3::Vec3;
 
 fn main() {
-    let nx: u32 = 300;
-    let ny: u32 = 300;
-    let ns: u32 = 40;
+    let nx: u32 = 400;
+    let ny: u32 = 400;
+    let ns: u32 = 50;
 
     // Objects setup
-    let world = scene::cornell_box();
+    let world = scene::blocks();
 
     // Camera setup
     let cam = camera::camera_for_cornell_box(nx, ny);
@@ -40,7 +40,7 @@ fn main() {
     // Parallell process
     let start = Instant::now();
 
-    let mut f = BufWriter::new(fs::File::create("./output/debug.ppm").unwrap());
+    let mut f = BufWriter::new(fs::File::create("./output/volumes.ppm").unwrap());
     f.write_all(format!("P3\n{} {}\n255\n", nx, ny).as_bytes())
         .unwrap();
 
