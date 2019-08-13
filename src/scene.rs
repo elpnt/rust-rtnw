@@ -332,7 +332,7 @@ pub fn blocks() -> HitableList {
     let red = Lambertian::new(ConstantTexture::new(0.65, 0.05, 0.05));
     let white = Lambertian::new(ConstantTexture::new(0.73, 0.73, 0.73));
     let green = Lambertian::new(ConstantTexture::new(0.12, 0.45, 0.15));
-    let light = DiffuseLight::new(ConstantTexture::new(15.0, 15.0, 15.0));
+    let light = DiffuseLight::new(ConstantTexture::new(7.0, 7.0, 7.0));
 
     let box1 = Translate::new(
         Rotate::new(
