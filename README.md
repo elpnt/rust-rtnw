@@ -25,3 +25,6 @@ Ray Tracing -The Next Week- written in Rust
 ### Ch7: Instances
 
 ![](./png/translate.png)
+
+### Ch8: Volumes
+![](./png/volumes.png)
