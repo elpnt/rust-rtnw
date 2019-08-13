@@ -27,12 +27,12 @@ use ray::Ray;
 use vec3::Vec3;
 
 fn main() {
-    let nx: u32 = 800;
-    let ny: u32 = 800;
-    let ns: u32 = 100;
+    let nx: u32 = 300;
+    let ny: u32 = 300;
+    let ns: u32 = 40;
 
     // Objects setup
-    let world = scene::blocks();
+    let world = scene::cornell_box();
 
     // Camera setup
     let cam = camera::camera_for_cornell_box(nx, ny);
@@ -40,7 +40,7 @@ fn main() {
     // Parallell process
     let start = Instant::now();
 
-    let mut f = BufWriter::new(fs::File::create("./output/volumes.ppm").unwrap());
+    let mut f = BufWriter::new(fs::File::create("./output/debug.ppm").unwrap());
     f.write_all(format!("P3\n{} {}\n255\n", nx, ny).as_bytes())
         .unwrap();
 
@@ -75,37 +75,13 @@ fn main() {
         .collect();
 
     for pix in pixels {
-        let ir = (255.99 * pix.x) as i32;
-        let ig = (255.99 * pix.y) as i32;
-        let ib = (255.99 * pix.z) as i32;
+        let ir = (255.99 * pix.x.max(0.0).min(1.0)) as i32;
+        let ig = (255.99 * pix.y.max(0.0).min(1.0)) as i32;
+        let ib = (255.99 * pix.z.max(0.0).min(1.0)) as i32;
         f.write(format!("{} {} {}\n", ir, ig, ib).as_bytes())
             .unwrap();
     }
 
     let duration = start.elapsed();
     println!("Elapsed time: {:?}", duration);
-
-    /* Single thread process
-    for j in (0..ny).rev() {
-        for i in 0..nx {
-            let mut col = Vec3::new(0.0, 0.0, 0.0);
-            for _ in 0..ns {
-                let u = (i as f32 + rand::random::<f32>()) / nx as f32;
-                let v = (j as f32 + rand::random::<f32>()) / ny as f32;
-                let r: Ray = cam.get_ray(u, v);
-                let c = color(&r, &world, 0);
-                col += c;
-            }
-
-            col /= ns as f32;
-            col = Vec3::new(col.x.sqrt(), col.y.sqrt(), col.z.sqrt());
-            let ir = (255.99 * col.x) as i32;
-            let ig = (255.99 * col.y) as i32;
-            let ib = (255.99 * col.z) as i32;
-
-            f.write(format!("{} {} {}\n", ir, ig, ib).as_bytes())
-                .unwrap();
-        }
-    }
-    */
 }
