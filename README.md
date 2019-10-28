@@ -1,4 +1,4 @@
-# rust-RTOW
+# rust-RTNW
 Ray Tracing -The Next Week- written in Rust
 
 # Output Example
